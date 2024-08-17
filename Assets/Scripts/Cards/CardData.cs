@@ -1,52 +1,5 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
-
-public static class CardLibrary
-{
-	public static List<Card> AllCards { get; } = new List<Card>();
-	public static List<Card> CurrentDeck { get; } = new List<Card>();
-
-	public static float RarityToWeight(Rarity rarity) => rarity switch
-	{
-		Rarity.Common => 1f,
-		Rarity.Rare => 0.5f,
-		Rarity.Epic => 0.25f,
-		Rarity.Legendary => 0.1f,
-		_ => 0f,
-	};
-
-	public static (Card, Card, Card) GetCardDraw()
-	{
-		float totalWeight = 0;
-		foreach (Card card in AllCards)
-			if (card.Drawable)
-				totalWeight += RarityToWeight(card.BaseRarity);
-		return (PickCard(Random.Range(0, totalWeight)).NewCardVariant(),
-			PickCard(Random.Range(0, totalWeight)).NewCardVariant(),
-			PickCard(Random.Range(0, totalWeight)).NewCardVariant());
-	}
-
-	private static Card PickCard(float pick)
-	{
-		foreach (Card card in AllCards)
-		{
-			if (card.Drawable)
-			{
-				pick -= RarityToWeight(card.BaseRarity);
-				if (pick < 0)
-					return card;
-			}
-		}
-		return AllCards[^1];
-	}
-}
-
-public interface IReplicable
-{
-	public Card Replicate();
-}
 
 public enum Rarity
 {
@@ -56,28 +9,87 @@ public enum Rarity
 	Legendary,
 }
 
-public abstract class Card
+[Flags]
+public enum TargetType
 {
-	public virtual bool Drawable => true;
-	public abstract Rarity BaseRarity { get; }
-	public abstract Rarity Rarity { get; }
+	Enemy,
+	Player,
+}
+
+public enum CardType
+{
+	Attack,
+	Block,
+	Evade,
+	AoE,
+	DoubleAttack,
+	Feint,
+	StackingEvade,
+	Heal,
+	HealthBuffer,
+	FaultyReplicate,
+	Prepare,
+}
+
+[CreateAssetMenu(fileName = "DefaultCard", menuName = "ScriptableObjects/CardData", order = 1)]
+public class CardData : ScriptableObject
+{
+	/// <summary> If the card can be drawn from the greater pool </summary>
+	public bool Drawable = false;
+	public CardData RootCard { get; private set; }
+	public string Name;
+	public string Description;
+	public int Energy;
+
+	public Rarity BaseRarity = Rarity.Common;
+
+	public int MinValue;
+	public int MaxValue;
+	public int RareValue = -1;
+	public CardType CardType;
+
+	public CardData Clone()
+	{
+		CardData clone = (CardData)MemberwiseClone();
+		if (RootCard == null)
+			clone.RootCard = this;
+		return clone;
+	}
+
+	private const int RarityUpChance = 10;
+	public int CurrentValue { get; set; }
+
+	public Rarity Rarity => RareValue > 0 && CurrentValue == RareValue
+				? (Rarity)Math.Min((int)(BaseRarity + 1), (int)Rarity.Legendary)
+				: BaseRarity;
+
+	public TargetType Target => CardType switch
+	{
+		CardType.Attack => TargetType.Enemy,
+		CardType.DoubleAttack => TargetType.Enemy,
+		CardType.Block => TargetType.Player,
+		CardType.Evade => TargetType.Player,
+		CardType.AoE => TargetType.Enemy,
+		CardType.Feint => TargetType.Enemy,
+		CardType.StackingEvade => TargetType.Player,
+		CardType.Heal => TargetType.Player,
+		CardType.HealthBuffer => TargetType.Player,
+		CardType.FaultyReplicate => TargetType.Player,
+		CardType.Prepare => TargetType.Player,
+		_ => throw new NotImplementedException(),
+	};
+
+	public void OnEnable() => SetupAsDefault();
+
+	public void SetupAsDefault() => CurrentValue = MinValue + (MaxValue - MinValue) / 2;
 
 	/// <summary> New card is current card with random variance in damage block etc.. </summary>
-	public abstract Card NewCardVariant();
-
-	[Flags]
-	public enum TargetType
+	public CardData NewCardVariant()
 	{
-		Enemy,
-		Player,
+		CardData clone = Clone();
+		clone.CurrentValue = (RareValue > 0 && UnityEngine.Random.Range(0, 100) < RarityUpChance)
+			? RareValue
+			: UnityEngine.Random.Range(MinValue, MaxValue + 1);
+		return clone;
 	}
-
-	public virtual TargetType Target { get; set; }
-
-	public virtual void OnDraw()
-	{
-	}
-
-	public virtual void OnUse(Entity usedOn)
-		=> Debug.Assert(Target == TargetType.Enemy ? usedOn is Enemy : usedOn is Player);
 }

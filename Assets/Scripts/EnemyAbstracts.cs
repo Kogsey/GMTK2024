@@ -58,14 +58,4 @@ public abstract class Enemy : Entity
 
 	/// <summary> Attack player </summary>
 	public abstract void DoTurn();
-
-	// Start is called before the first frame update
-	private void Start()
-	{
-	}
-
-	// Update is called once per frame
-	private void Update()
-	{
-	}
 }

@@ -1,105 +1,61 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 [Singleton]
 public class Player : Entity, ISingleton
 {
-	public CardData PlayCard = null;
-	public Entity Target = null;
+	public override Color HighlightColour => Color.green;
+	private CardData PlayCard = null;
+	private Entity Target = null;
+	public TextMeshProUGUI EnergyText;
+	public void SetNextCard(CardData cardData, Entity entity)
+	{
+		PlayCard = cardData;
+		Target = entity;
+	}
+
 	private const int MaxEnergy = 3;
-	public int Energy { get; private set; } = MaxEnergy;
-	private int ExtraEnergy = 1;
-	private int DamageMultiplier = 1;
+	private int energy = MaxEnergy;
+	public int Energy
+	{
+		get => energy; set
+		{
+			EnergyText.text = value.ToString();
+			energy = value;
+		}
+	}
+	public int ExtraEnergy { get; set; }
+	public int DamageMultiplier { get; set; } = 1;
 
 	public override int ModifyDamage(int damage)
 		=> base.ModifyDamage(damage * DamageMultiplier);
+	public bool ForceEndTurn;
+	public void EndTurnPressed()
+		=> ForceEndTurn = true;
+	public bool EndPlayerTurn()
+		=> Energy <= 0 || ForceEndTurn;
 
 	public override IEnumerator Turn()
 	{
-		while (Energy > 0)
+		while (!EndPlayerTurn())
 		{
-			while (PlayCard == null || Target == null)
+			if (Target != null && PlayCard != null)
 			{
-				yield return null;
+				yield return PlayCard.PlayCard(this, Target);
+				PlayCard = null;
+				Target = null;
 			}
-
-			switch (PlayCard.CardType)
-			{
-				case CardType.Attack:
-					yield return Target.Damage(this, PlayCard.CurrentValue);
-					break;
-
-				case CardType.Block:
-					Target.Block += PlayCard.CurrentValue;
-					break;
-
-				case CardType.Evade:
-					Target.EvasionChance += PlayCard.CurrentValue;
-					break;
-
-				case CardType.AoE:
-					IEnumerable<Coroutine> routines = Singleton<GameManager>.instance.Enemies.Select(enemy => StartCoroutine(enemy.Damage(this, PlayCard.CurrentValue)));
-					foreach (Coroutine coroutine in routines)
-						yield return coroutine;
-					break;
-
-				case CardType.DoubleAttack:
-					yield return Target.Damage(this, PlayCard.CurrentValue);
-					yield return Target.Damage(this, PlayCard.CurrentValue);
-					break;
-
-				case CardType.Feint:
-					EvasionChance += 10;
-					yield return Target.Damage(this, PlayCard.CurrentValue);
-					break;
-
-				case CardType.StackingEvade:
-					EvasionChance += PlayCard.CurrentValue;
-					StackingEvade += 20;
-					break;
-
-				case CardType.Heal:
-					Health += PlayCard.CurrentValue;
-					Health = Math.Min(Health, MaxHealth);
-					PlayCard.RootCard.CurrentValue /= 2;
-					if (PlayCard.RootCard.CurrentValue < 1)
-						PlayCard.RootCard.CurrentValue = 1;
-					break;
-
-				case CardType.HealthBuffer:
-					Absorption += PlayCard.CurrentValue;
-					PlayCard.RootCard.CurrentValue /= 2;
-					if (PlayCard.RootCard.CurrentValue < 1)
-						PlayCard.RootCard.CurrentValue = 1;
-					break;
-
-				case CardType.FaultyReplicate:
-					StartCoroutine(OnHitEffect());
-					Health -= PlayCard.CurrentValue;
-					DamageMultiplier += 1;
-					break;
-
-				case CardType.Prepare:
-					ExtraEnergy += 1;
-					break;
-
-				default:
-					throw new NotImplementedException();
-			}
-
-			Energy -= PlayCard.Energy;
-
-			PlayCard = null;
-			Target = null;
 
 			yield return null;
 		}
+
+		ForceEndTurn = false;
 	}
+
 	public Sprite HardBee;
+
 	public override IEnumerator BlockEffect()
 	{
 		Sprite startSprite = SpriteRenderer.sprite;
@@ -112,14 +68,17 @@ public class Player : Entity, ISingleton
 		}
 	}
 
-	public bool CanPlayCard(CardData card, Entity target) => card.Energy <= Energy
-		&& (target is Player ? EnumUtility.HasFlag(card.Target, TargetType.Player) : EnumUtility.HasFlag(card.Target, TargetType.Enemy));
 	public override IEnumerator PreTurn()
 	{
 		Energy = MaxEnergy + ExtraEnergy;
 		ExtraEnergy = 0;
 		DamageMultiplier = 1;
 		yield return base.PreTurn();
+	}
+
+	public override IEnumerator PostTurn()
+	{
+		yield break;
 	}
 
 	protected override void Start()

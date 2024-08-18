@@ -3,19 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
+using Random = UnityEngine.Random;
 
 [Singleton]
 public class GameManager : MonoBehaviour, ISingleton
 {
+	public IEnumerable<Entity> AllCardTargets
+		=> Enemies.Append<Entity>(Player);
+
+	private List<Enemy> ToRemove { get; } = new List<Enemy>();
 	public List<Enemy> Enemies { get; } = new List<Enemy>();
 	public Coroutine Coroutine { get; private set; }
+
 	[Min(1)]
 	public int DifficultyRating;
+
 	public List<WeightedEnemyData> EnemyData;
 	public WeightedActionEnemy Prefab;
 	public RectTransform EnemyParent;
 	public Player Player;
 	public EnemyGeneration CurrentMode = EnemyGeneration.Robot;
+	public bool GameIsOver { get; set; }
 
 	public enum RoundState
 	{
@@ -36,16 +45,18 @@ public class GameManager : MonoBehaviour, ISingleton
 	public IEnumerator StepRoundLoop()
 	{
 		yield return null;
-		while (!RoundEnded())
+		while (!HasGameEnded())
 		{
 			switch (CurrentRoundState)
 			{
 				case RoundState.PreStart:
+					Debug.WriteLine("PreStart");
 					foreach (Enemy enemy in Enemies)
-						yield return enemy.PickNextAction();
+						yield return enemy.PostTurn();
 					break;
 
 				case RoundState.PlayerTurn:
+					Debug.WriteLine("PlayerTurn");
 					yield return Player.PreTurn();
 					yield return Player.Turn();
 					yield return Player.PostTurn();
@@ -54,6 +65,7 @@ public class GameManager : MonoBehaviour, ISingleton
 				case RoundState.EnemyTurn:
 					foreach (Enemy enemy in Enemies)
 					{
+						Debug.WriteLine(enemy);
 						yield return enemy.PreTurn();
 						yield return enemy.Turn();
 						yield return enemy.PostTurn();
@@ -61,6 +73,8 @@ public class GameManager : MonoBehaviour, ISingleton
 					break;
 
 				case RoundState.RoundEnd:
+					Debug.WriteLine("RoundEnd");
+					yield return Singleton<CardManager>.instance.EndRound();
 					break;
 
 				default:
@@ -68,12 +82,33 @@ public class GameManager : MonoBehaviour, ISingleton
 			}
 
 			CurrentRoundState += 1;
-			if (CurrentRoundState == RoundState.RoundEnd)
+			if (CurrentRoundState > RoundState.RoundEnd)
 				CurrentRoundState = RoundState.PlayerTurn;
+
+			foreach (Enemy killMe in ToRemove)
+				Enemies.Remove(killMe);
+			ToRemove.Clear();
+		}
+		GameIsOver = true;
+	}
+
+	public void UpdateKill(Enemy killMe)
+	{
+		Debug.WriteLine($"{killMe} killed");
+		Destroy(killMe.gameObject);
+		if (CurrentRoundState == RoundState.EnemyTurn)
+			ToRemove.Add(killMe);
+		else
+			Enemies.Remove(killMe);
+
+		if (Enemies.Count == 0)
+		{
+			StopCoroutine(Coroutine);
+			GameIsOver = true;
 		}
 	}
 
-	private bool RoundEnded()
+	private bool HasGameEnded()
 	{
 		bool enemiesDead = true;
 		foreach (Enemy enemy in Enemies)
@@ -104,4 +139,10 @@ public class GameManager : MonoBehaviour, ISingleton
 
 	private T GetRandom<T>(IEnumerable<T> values)
 		=> values.ElementAt(Random.Range(0, values.Count()));
+
+	public void Update()
+	{
+		if (GameIsOver)
+			throw new System.Exception("Round ended");
+	}
 }

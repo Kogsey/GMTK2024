@@ -15,17 +15,22 @@ public enum EnemyGeneration
 
 public abstract class Enemy : Entity
 {
+	public override Color HighlightColour => Color.red * Color.white;
 	public SpriteRenderer MoveSprite;
 	public abstract IconIDs DisplayAction { get; }
 	public abstract int DisplayActionCount { get; }
-
+	public override IEnumerator DeathEffect()
+	{
+		yield return base.DeathEffect();
+		Singleton<GameManager>.instance.UpdateKill(this);
+	}
 	public override IEnumerator PostTurn()
 	{
 		yield return PickNextAction();
 		SetMoveSprite();
 	}
 
-	protected virtual void SetMoveSprite()
+	protected void SetMoveSprite()
 		=> MoveSprite.sprite = Singleton<IconBank>.instance.GetSprite(DisplayAction);
 
 	public abstract IEnumerator PickNextAction();

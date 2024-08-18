@@ -14,6 +14,14 @@ public enum WeightedEnemyActionType
 
 public class WeightedActionEnemy : Enemy
 {
+	public IconIDs ActionToHint(WeightedEnemyActionType weightedEnemyAction)
+		=> weightedEnemyAction switch
+		{
+			WeightedEnemyActionType.Attack => IconIDs.Sword,
+			WeightedEnemyActionType.Block => IconIDs.ShieldCircle,
+			WeightedEnemyActionType.Evade => IconIDs.BlueLightning,
+			_ => throw new NotImplementedException(),
+		};
 	public WeightedEnemyData WeightedEnemyData
 	{
 		set
@@ -33,20 +41,12 @@ public class WeightedActionEnemy : Enemy
 	public override IconIDs DisplayAction => ActionToHint(NextAction.ActionDisplay);
 	public override int DisplayActionCount => NextAction.Amount;
 
-	public IconIDs ActionToHint(WeightedEnemyActionType weightedEnemyAction)
-		=> weightedEnemyAction switch
-		{
-			WeightedEnemyActionType.Attack => IconIDs.Sword,
-			WeightedEnemyActionType.Block => IconIDs.ShieldCircle,
-			WeightedEnemyActionType.Evade => IconIDs.BlueLightning,
-			_ => throw new NotImplementedException(),
-		};
-
 	public override IEnumerator Turn()
 	{
 		switch (NextAction.ActionDisplay)
 		{
 			case WeightedEnemyActionType.Attack:
+				StartCoroutine(AttackAnimation());
 				yield return Singleton<Player>.instance.Damage(this, NextAction.Amount);
 				break;
 

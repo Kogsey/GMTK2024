@@ -17,6 +17,8 @@ public enum AnimationEffect
 
 public abstract class Entity : MonoBehaviour
 {
+	public abstract Color HighlightColour { get; }
+	public Color TargetColour => (Highlight ? HighlightColour : Color.white).WithAlpha(1f - evasionChance / 100f);
 	public int Health;
 	public int Absorption;
 	public int Block;
@@ -24,10 +26,32 @@ public abstract class Entity : MonoBehaviour
 	public int StackingEvade;
 	public AnimationEffect AnimationEffects;
 
+	private bool highlight;
+
+	public bool Highlight
+	{
+		get => highlight; set
+		{
+			highlight = value;
+			SpriteRenderer.color = TargetColour;
+		}
+	}
+
+	private int evasionChance;
+
 	/// <summary> An <see cref="EvasionChance"/>% chance to dodge an attack. </summary>
-	public int EvasionChance { get; set; }
+	public int EvasionChance
+	{
+		get => evasionChance; set
+		{
+			evasionChance = value;
+			SpriteRenderer.color = TargetColour;
+		}
+	}
+
 	public virtual int ModifyDamage(int damage)
 		=> damage;
+
 	public virtual IEnumerator Damage(Entity source, int damage)
 	{
 		if (Health < 0)
@@ -68,7 +92,8 @@ public abstract class Entity : MonoBehaviour
 		}
 
 		Health -= newDamage;
-		yield return Health <= 0 ? DeathEffect() : OnHitEffect();
+		StartCoroutine(Health <= 0 ? DeathEffect() : OnHitEffect());
+		yield return null;
 	}
 
 	public IEnumerator OnHitEffect()
@@ -82,7 +107,7 @@ public abstract class Entity : MonoBehaviour
 		}
 	}
 
-	public IEnumerator DeathEffect()
+	public virtual IEnumerator DeathEffect()
 	{
 		StartCoroutine(OnHitEffect());
 		SpriteRenderer.color = Color.red;
@@ -95,18 +120,39 @@ public abstract class Entity : MonoBehaviour
 
 	public virtual IEnumerator BlockEffect()
 	{
-		Color startColour = SpriteRenderer.color;
 		for (int i = 0; i < 10; i++)
 		{
 			yield return new WaitForSeconds(0.05f);
 			SpriteRenderer.color = Color.gray;
 			yield return new WaitForSeconds(0.05f);
-			SpriteRenderer.color = startColour;
+			SpriteRenderer.color = TargetColour;
 		}
 	}
+
+	private readonly float attackAnimationDistance = 7.5f;
+	private readonly int attackAnimationFrames = 20;
+
+	public virtual IEnumerator AttackAnimation(int direction = -1)
+	{
+		PauseAnimation = true;
+		for (int i = 0; i < attackAnimationFrames; i++)
+		{
+			SpriteRenderer.transform.position += new Vector3(direction * (attackAnimationDistance / attackAnimationFrames), 0);
+			yield return null;
+		}
+		for (int i = 0; i < attackAnimationFrames; i++)
+		{
+			SpriteRenderer.transform.position -= new Vector3(direction * (attackAnimationDistance / attackAnimationFrames), 0);
+			yield return null;
+		}
+		PauseAnimation = false;
+	}
+
 	public IEnumerator DodgeEffect()
 	{
-		yield return null; // TODO
+		SpriteRenderer.color = new Color(0, 0, 0, 0);
+		yield return new WaitForSeconds(0.5f);
+		SpriteRenderer.color = TargetColour;
 	}
 
 	public virtual IEnumerator PreTurn()
@@ -119,10 +165,7 @@ public abstract class Entity : MonoBehaviour
 
 	public abstract IEnumerator Turn();
 
-	public virtual IEnumerator PostTurn()
-	{
-		yield return null;
-	}
+	public abstract IEnumerator PostTurn();
 
 	protected virtual void Start()
 	{
@@ -135,22 +178,28 @@ public abstract class Entity : MonoBehaviour
 	public HealthBar HealthBar;
 	public RectTransform EffectsHolder;
 	private float myTimer;
+	public bool PauseAnimation { get; set; } = false;
+
 	protected virtual void Update()
 	{
 		HealthBar.UpdateBar(Health, Block, Absorption);
-		myTimer += Time.smoothDeltaTime;
-		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.Bob))
-			SpriteRenderer.transform.localPosition = new Vector3(0, Mathf.Sin(myTimer)) * 0.25f;
-		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.SquishX))
-			SpriteRenderer.transform.localScale = new Vector3(4 - Mathf.Cos(myTimer) * 0.4f, 4, 4);
 
-		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.SquishY))
-			SpriteRenderer.transform.localScale = new Vector3(4, 4 - Mathf.Sin(myTimer) * 0.4f, 4);
-		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.Wobble))
+		if (!PauseAnimation)
 		{
-			Quaternion localRot = SpriteRenderer.transform.localRotation;
-			localRot.eulerAngles = new Vector3(0, 0, Mathf.Sin(myTimer * 2) * 10f);
-			SpriteRenderer.transform.localRotation = localRot;
+			myTimer += Time.smoothDeltaTime;
+			if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.Bob))
+				SpriteRenderer.transform.localPosition = new Vector3(0, Mathf.Sin(myTimer)) * 0.25f;
+			if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.SquishX))
+				SpriteRenderer.transform.localScale = new Vector3(4 - Mathf.Cos(myTimer) * 0.4f, 4, 4);
+
+			if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.SquishY))
+				SpriteRenderer.transform.localScale = new Vector3(4, 4 - Mathf.Sin(myTimer) * 0.4f, 4);
+			if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.Wobble))
+			{
+				Quaternion localRot = SpriteRenderer.transform.localRotation;
+				localRot.eulerAngles = new Vector3(0, 0, Mathf.Sin(myTimer * 2) * 10f);
+				SpriteRenderer.transform.localRotation = localRot;
+			}
 		}
 	}
 }

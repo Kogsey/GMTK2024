@@ -1,4 +1,8 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum Rarity
@@ -92,5 +96,80 @@ public class CardData : ScriptableObject
 			? RareValue
 			: UnityEngine.Random.Range(MinValue, MaxValue + 1);
 		return clone;
+	}
+
+	public bool CanPlayCard(Entity target) => Energy <= Singleton<Player>.instance.Energy
+		&& (target is Player ? EnumUtility.HasFlag(Target, TargetType.Player) : EnumUtility.HasFlag(Target, TargetType.Enemy));
+
+	public IEnumerator PlayCard(Player player, Entity Target)
+	{
+		player.Energy -= Energy;
+		switch (CardType)
+		{
+			case CardType.Attack:
+				player.StartCoroutine(player.AttackAnimation(1));
+				yield return Target.Damage(player, CurrentValue);
+				break;
+
+			case CardType.Block:
+				Target.Block += CurrentValue;
+				break;
+
+			case CardType.Evade:
+				Target.EvasionChance += CurrentValue;
+				break;
+
+			case CardType.AoE:
+				player.StartCoroutine(player.AttackAnimation(1));
+				IEnumerable<Coroutine> routines = Singleton<GameManager>.instance.Enemies.Select(enemy => player.StartCoroutine(enemy.Damage(player, CurrentValue)));
+				foreach (Coroutine coroutine in routines)
+					yield return coroutine;
+				break;
+
+			case CardType.DoubleAttack:
+				player.StartCoroutine(player.AttackAnimation(1).Chain(player.AttackAnimation(1)));
+				yield return Target.Damage(player, CurrentValue);
+				yield return Target.Damage(player, CurrentValue);
+				break;
+
+			case CardType.Feint:
+				player.StartCoroutine(player.AttackAnimation(1));
+				player.EvasionChance += 10;
+				yield return Target.Damage(player, CurrentValue);
+				break;
+
+			case CardType.StackingEvade:
+				player.EvasionChance += CurrentValue;
+				player.StackingEvade += 20;
+				break;
+
+			case CardType.Heal:
+				player.Health += CurrentValue;
+				player.Health = Math.Min(player.Health, player.MaxHealth);
+				RootCard.CurrentValue /= 2;
+				if (RootCard.CurrentValue < 1)
+					RootCard.CurrentValue = 1;
+				break;
+
+			case CardType.HealthBuffer:
+				player.Absorption += CurrentValue;
+				RootCard.CurrentValue /= 2;
+				if (RootCard.CurrentValue < 1)
+					RootCard.CurrentValue = 1;
+				break;
+
+			case CardType.FaultyReplicate:
+				player.StartCoroutine(player.OnHitEffect());
+				player.Health -= CurrentValue;
+				player.DamageMultiplier += 1;
+				break;
+
+			case CardType.Prepare:
+				player.ExtraEnergy += 1;
+				break;
+
+			default:
+				throw new NotImplementedException();
+		}
 	}
 }

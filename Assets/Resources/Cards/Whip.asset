@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Whip
   m_EditorClassIdentifier: 
   Drawable: 1
-  Name: Whip
-  Description: Hit all enemies for {0} damage
+  Name: Swarm
+  Description: Swarm all enemies for {0} damage
   Energy: 1
   BaseRarity: 1
   MinValue: 2

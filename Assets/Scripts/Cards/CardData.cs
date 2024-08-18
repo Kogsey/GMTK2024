@@ -12,8 +12,8 @@ public enum Rarity
 [Flags]
 public enum TargetType
 {
-	Enemy,
-	Player,
+	Enemy = 1,
+	Player = 2,
 }
 
 public enum CardType
@@ -36,6 +36,7 @@ public class CardData : ScriptableObject
 {
 	/// <summary> If the card can be drawn from the greater pool </summary>
 	public bool Drawable = false;
+
 	public CardData RootCard { get; private set; }
 	public string Name;
 	public string Description;

@@ -1,14 +1,18 @@
+using System;
 using System.Collections;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public enum DamageResult
+[Flags]
+public enum AnimationEffect
 {
-	Dodged,
-	Blocked,
-	Landed,
-	Kill,
+	None = 0b_0000,
+	Bob = 0b_0001,
+	SquishX = 0b_0010,
+	SquishY = 0b_0100,
+	Wobble = 0b_1000,
 }
 
 public abstract class Entity : MonoBehaviour
@@ -18,6 +22,7 @@ public abstract class Entity : MonoBehaviour
 	public int Block;
 	public int MaxHealth;
 	public int StackingEvade;
+	public AnimationEffect AnimationEffects;
 
 	/// <summary> An <see cref="EvasionChance"/>% chance to dodge an attack. </summary>
 	public int EvasionChance { get; set; }
@@ -33,7 +38,10 @@ public abstract class Entity : MonoBehaviour
 		if (EvasionChance > 0)
 		{
 			if (Random.Range(0, 100) > EvasionChance)
-				yield break; //TODO
+			{
+				StartCoroutine(DodgeEffect());
+				yield break;
+			}
 		}
 
 		EvasionChance += StackingEvade;
@@ -47,7 +55,10 @@ public abstract class Entity : MonoBehaviour
 		}
 
 		if (newDamage == 0)
-			yield break; //TODO
+		{
+			StartCoroutine(BlockEffect());
+			yield break;
+		}
 
 		if (Absorption > 0)
 		{
@@ -62,16 +73,13 @@ public abstract class Entity : MonoBehaviour
 
 	public IEnumerator OnHitEffect()
 	{
-		if (SpriteRenderer != null)
-			for (int i = 0; i < 10; i++)
-			{
-				yield return new WaitForSeconds(0.05f);
-				SpriteRenderer.enabled = false;
-				yield return new WaitForSeconds(0.05f);
-				SpriteRenderer.enabled = true;
-			}
-		else
-			yield return null;
+		for (int i = 0; i < 10; i++)
+		{
+			yield return new WaitForSeconds(0.05f);
+			SpriteRenderer.enabled = false;
+			yield return new WaitForSeconds(0.05f);
+			SpriteRenderer.enabled = true;
+		}
 	}
 
 	public IEnumerator DeathEffect()
@@ -83,6 +91,22 @@ public abstract class Entity : MonoBehaviour
 			transform.Rotate(Vector3.forward, 1f);
 			yield return null;
 		}
+	}
+
+	public virtual IEnumerator BlockEffect()
+	{
+		Color startColour = SpriteRenderer.color;
+		for (int i = 0; i < 10; i++)
+		{
+			yield return new WaitForSeconds(0.05f);
+			SpriteRenderer.color = Color.gray;
+			yield return new WaitForSeconds(0.05f);
+			SpriteRenderer.color = startColour;
+		}
+	}
+	public IEnumerator DodgeEffect()
+	{
+		yield return null; // TODO
 	}
 
 	public virtual IEnumerator PreTurn()
@@ -100,18 +124,33 @@ public abstract class Entity : MonoBehaviour
 		yield return null;
 	}
 
-	// Start is called before the first frame update
-	private void Start()
-		=> StartB();
-
-	protected virtual void StartB()
+	protected virtual void Start()
 	{
 		Health = MaxHealth;
 		HealthBar.Setup(MaxHealth);
+		myTimer = Random.value * 100;
 	}
 
 	public SpriteRenderer SpriteRenderer;
 	public HealthBar HealthBar;
+	public RectTransform EffectsHolder;
+	private float myTimer;
+	protected virtual void Update()
+	{
+		HealthBar.UpdateBar(Health, Block, Absorption);
+		myTimer += Time.smoothDeltaTime;
+		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.Bob))
+			SpriteRenderer.transform.localPosition = new Vector3(0, Mathf.Sin(myTimer)) * 0.25f;
+		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.SquishX))
+			SpriteRenderer.transform.localScale = new Vector3(4 - Mathf.Cos(myTimer) * 0.4f, 4, 4);
 
-	public void Update() => HealthBar.UpdateBar(Health, Block, Absorption);
+		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.SquishY))
+			SpriteRenderer.transform.localScale = new Vector3(4, 4 - Mathf.Sin(myTimer) * 0.4f, 4);
+		if (EnumUtility.HasFlag(AnimationEffects, AnimationEffect.Wobble))
+		{
+			Quaternion localRot = SpriteRenderer.transform.localRotation;
+			localRot.eulerAngles = new Vector3(0, 0, Mathf.Sin(myTimer * 2) * 10f);
+			SpriteRenderer.transform.localRotation = localRot;
+		}
+	}
 }

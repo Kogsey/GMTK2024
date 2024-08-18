@@ -18,6 +18,7 @@ public class CardBehave : MonoBehaviour
 
 	public SpriteRenderer Border;
 	public SpriteRenderer CardBack;
+	public SpriteRenderer CardBackground;
 	public TextMeshProUGUI Actions;
 	public TextMeshProUGUI Description;
 	public TextMeshProUGUI Name;

@@ -2,33 +2,62 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine;
 using Random = UnityEngine.Random;
+
+public enum WeightedEnemyActionType
+{
+	Attack,
+	Block,
+	Evade,
+}
 
 public class WeightedActionEnemy : Enemy
 {
+	public WeightedEnemyData WeightedEnemyData
+	{
+		set
+		{
+			MaxHealth = Random.Range(value.MinHealth, value.MaxHealth + 1);
+			Health = MaxHealth;
+			Block = value.StartBlock;
+			Absorption = value.StartAbsorb;
+			SpriteRenderer.sprite = value.Sprite;
+			ActionPool = new List<GenericEnemyAction>(value.ActionPool);
+			AnimationEffects = value.AnimationEffects;
+		}
+	}
+
+	private List<GenericEnemyAction> ActionPool;
 	private GenericEnemyAction NextAction;
-	public override EnemyActionType DisplayAction => NextAction.ActionDisplay;
+	public override IconIDs DisplayAction => ActionToHint(NextAction.ActionDisplay);
 	public override int DisplayActionCount => NextAction.Amount;
 
-	public List<GenericEnemyAction> ActionPool;
+	public IconIDs ActionToHint(WeightedEnemyActionType weightedEnemyAction)
+		=> weightedEnemyAction switch
+		{
+			WeightedEnemyActionType.Attack => IconIDs.Sword,
+			WeightedEnemyActionType.Block => IconIDs.ShieldCircle,
+			WeightedEnemyActionType.Evade => IconIDs.BlueLightning,
+			_ => throw new NotImplementedException(),
+		};
 
 	public override IEnumerator Turn()
 	{
 		switch (NextAction.ActionDisplay)
 		{
-			case EnemyActionType.Attack:
+			case WeightedEnemyActionType.Attack:
 				yield return Singleton<Player>.instance.Damage(this, NextAction.Amount);
 				break;
 
-			case EnemyActionType.Block:
+			case WeightedEnemyActionType.Block:
 				Block += NextAction.Amount;
 				break;
 
-			case EnemyActionType.Evade:
+			case WeightedEnemyActionType.Evade:
 				EvasionChance += NextAction.Amount;
 				break;
 
-			case EnemyActionType.Hidden:
 			default:
 				throw new NotImplementedException();
 		}
@@ -58,7 +87,7 @@ public class WeightedActionEnemy : Enemy
 [Serializable]
 public class GenericEnemyAction
 {
-	public EnemyActionType ActionDisplay;
+	public WeightedEnemyActionType ActionDisplay;
 	public int Amount;
 	public float Weight;
 }

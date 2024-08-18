@@ -99,6 +99,18 @@ public class Player : Entity, ISingleton
 			yield return null;
 		}
 	}
+	public Sprite HardBee;
+	public override IEnumerator BlockEffect()
+	{
+		Sprite startSprite = SpriteRenderer.sprite;
+		for (int i = 0; i < 5; i++)
+		{
+			yield return new WaitForSeconds(0.1f);
+			SpriteRenderer.sprite = HardBee;
+			yield return new WaitForSeconds(0.1f);
+			SpriteRenderer.sprite = startSprite;
+		}
+	}
 
 	public bool CanPlayCard(CardData card, Entity target) => card.Energy <= Energy
 		&& (target is Player ? EnumUtility.HasFlag(card.Target, TargetType.Player) : EnumUtility.HasFlag(card.Target, TargetType.Enemy));
@@ -110,9 +122,9 @@ public class Player : Entity, ISingleton
 		yield return base.PreTurn();
 	}
 
-	protected override void StartB()
+	protected override void Start()
 	{
-		base.StartB();
+		base.Start();
 		transform.position = new Vector3(-35, 0, 0);
 	}
 }

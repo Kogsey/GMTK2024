@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using Debug = System.Diagnostics.Debug;
 using Random = UnityEngine.Random;
 
-[Singleton(Persistent = true)]
+[Singleton]
 public class LevelManager : MonoBehaviour, ISingleton
 {
 	public IEnumerable<Entity> AllCardTargets
@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 	public Coroutine Coroutine { get; private set; }
 
 	public WeightedEnemyData[] EnemyData;
-	public WeightedEnemyData Sun;
+	public SunBoss SunBossPrefab;
 	public WeightedActionEnemy Prefab;
 	public RectTransform EnemyParent;
 	public Player Player;
@@ -118,23 +118,34 @@ public class LevelManager : MonoBehaviour, ISingleton
 		return enemiesDead || Player.Health <= 0;
 	}
 
+	public bool DebugGenSunBoss;
+
 	private void GenerateLevel()
 	{
 		LevelData levelData = CampaignState.GetLevelData();
-
-		IEnumerable<WeightedEnemyData> pool = levelData.Endless ? EnemyData : EnemyData.Where(enemy => EnumUtility.HasFlag(enemy.GenerationData, levelData.EnemyTypes) && enemy.MinLevel <= levelData.Level);
-
-		for (int i = 0; i < levelData.EnemyCount; i++)
+		if (DebugGenSunBoss)
+			levelData.SunBoss = true;
+		if (levelData.SunBoss)
 		{
-			WeightedActionEnemy weightedActionEnemy = Instantiate(Prefab, EnemyParent);
-			WeightedEnemyData data = GetRandom(pool);
-			if (EnumUtility.HasFlag(data.GenerationData, EnemyGeneration.Rare) && Random.value < 0.5f)
-				data = GetRandom(pool);
-			weightedActionEnemy.WeightedEnemyData = data;
-			Enemies.Add(weightedActionEnemy);
+			SunBoss sunBoss = Instantiate(SunBossPrefab);
+			Enemies.Add(sunBoss);
+		}
+		else
+		{
+			IEnumerable<WeightedEnemyData> pool = levelData.Endless ? EnemyData : EnemyData.Where(enemy => EnumUtility.HasFlag(enemy.GenerationData, levelData.EnemyTypes) && enemy.MinLevel <= levelData.Level);
+
+			for (int i = 0; i < levelData.EnemyCount; i++)
+			{
+				WeightedActionEnemy weightedActionEnemy = Instantiate(Prefab, EnemyParent);
+				WeightedEnemyData data = GetRandom(pool);
+				if (EnumUtility.HasFlag(data.GenerationData, EnemyGeneration.Rare) && Random.value < 0.5f)
+					data = GetRandom(pool);
+				weightedActionEnemy.WeightedEnemyData = data;
+				Enemies.Add(weightedActionEnemy);
+			}
 		}
 
-		SpriteBank.Instance.SetBackGround(levelData.EnemyTypes);
+		SpriteBank.Instance.SetBackGround(levelData);
 	}
 
 	private T GetRandom<T>(IEnumerable<T> values)

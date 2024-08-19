@@ -21,4 +21,10 @@ public static class Helpers
 		yield return enumerator1;
 		yield return enumerator2;
 	}
+
+	//public static void CopyTransformsTo(this Transform from, Transform to)
+	//{
+	//	to.SetPositionAndRotation(from.position, from.rotation);
+	//	to.localScale = from.localScale;
+	//}
 }

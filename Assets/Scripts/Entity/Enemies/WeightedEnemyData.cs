@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DefaultEnemy", menuName = "ScriptableObjects/EnemyData", order = 1)]
 public class WeightedEnemyData : ScriptableObject
 {
-	public bool Tall;
+	public int HeightMultiplier = 1;
 	public int MinHealth;
 	public int MaxHealth;
 	public int StartBlock;

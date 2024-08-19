@@ -37,8 +37,8 @@ public class WeightedActionEnemy : Enemy
 	{
 		set
 		{
-			if (value.Tall)
-				HealthBar.transform.localPosition *= 2;
+			MoveSprite.transform.localPosition += HealthBar.transform.localPosition * (value.HeightMultiplier - 1);
+			HealthBar.transform.localPosition *= value.HeightMultiplier;
 			MaxHealth = Random.Range(value.MinHealth, value.MaxHealth + 1);
 			Health = MaxHealth;
 			Block = value.StartBlock;
@@ -97,7 +97,7 @@ public class WeightedActionEnemy : Enemy
 		yield return null;
 	}
 
-	public override IEnumerator PickNextAction()
+	public override void PickNextAction()
 	{
 		float totalWeight = 0;
 		foreach (GenericEnemyAction action in ActionPool)
@@ -110,10 +110,9 @@ public class WeightedActionEnemy : Enemy
 			if (pick < 0)
 			{
 				NextAction = action;
-				break;
+				return;
 			}
 		}
-		yield return null;
 	}
 }
 

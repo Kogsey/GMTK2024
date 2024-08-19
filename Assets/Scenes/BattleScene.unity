@@ -773,11 +773,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4d17bfac70f979847a0a46d719e14bd7, type: 2}
   - {fileID: 11400000, guid: 158562d635f46a74d90f5c74bcfd3136, type: 2}
   - {fileID: 11400000, guid: 951ad13886effe141b4e5b5d871df5de, type: 2}
-  Sun: {fileID: 11400000, guid: d6d5ed23e11a60344b2aafaafb17093e, type: 2}
+  SunBossPrefab: {fileID: 7818330054501746175, guid: f8a52f61a3ed383449ebf1d11ea8d625, type: 3}
   Prefab: {fileID: 6847657330616338946, guid: 9cf5acf65f905f44ca2fc6bfee3a841c, type: 3}
   EnemyParent: {fileID: 2011032195}
   Player: {fileID: 1942400410}
   IconPrefab: {fileID: 8205594403056624896, guid: 483f3d028b291f94aabe67a9a9582276, type: 3}
+  DebugGenSunBoss: 1
 --- !u!114 &1259012044
 MonoBehaviour:
   m_ObjectHideFlags: 0

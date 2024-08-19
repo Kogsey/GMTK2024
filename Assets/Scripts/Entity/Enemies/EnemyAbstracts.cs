@@ -30,14 +30,14 @@ public abstract class Enemy : Entity
 	public override IEnumerator PostTurn()
 	{
 		yield return base.PostTurn();
-		yield return PickNextAction();
+		PickNextAction();
 		SetMoveSprite();
 	}
 
 	protected void SetMoveSprite()
 		=> MoveSprite.sprite = SpriteBank.Instance.GetSprite(DisplayAction);
 
-	public abstract IEnumerator PickNextAction();
+	public abstract void PickNextAction();
 
 	private readonly List<IEntityAnimation<Enemy>> animations = new();
 

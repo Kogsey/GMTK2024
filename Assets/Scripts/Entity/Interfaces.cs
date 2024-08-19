@@ -65,6 +65,20 @@ public interface IEntityAnimation<in T> where T : Entity
 	public void UpdateAnimation(T entity);
 }
 
+public class StaticScale : IEntityAnimation<Entity>
+{
+	public StaticScale(Vector3 scale) => Scale = scale;
+
+	public StaticScale(float scale) : this(new Vector3(scale, scale, scale))
+	{ }
+
+	public Vector3 Scale { get; }
+	public bool Complete => false;
+
+	public void UpdateAnimation(Entity entity)
+		=> entity.SpriteRenderer.transform.localScale = Helpers.MemberWiseMultiply(entity.SpriteRenderer.transform.localScale, Scale);
+}
+
 public static class Extensions
 {
 	public static IEnumerator AwaitComplete<T, U>(this T animation) where T : IEntityAnimation<U> where U : Entity

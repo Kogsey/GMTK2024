@@ -39,9 +39,10 @@ public class SpriteBank : MonoBehaviour
 
 	public Sprite[] Backgrounds;
 
-	public void SetBackGround(EnemyGeneration level) => BackgroundRenderer.sprite =
-		EnumUtility.HasFlag(level, EnemyGeneration.Robot) ? Backgrounds[0] :
-		EnumUtility.HasFlag(level, EnemyGeneration.Plants) ? Backgrounds[1] :
+	public void SetBackGround(LevelData level) => BackgroundRenderer.sprite =
+		level.SunBoss ? Backgrounds[3] :
+		EnumUtility.HasFlag(level.EnemyTypes, EnemyGeneration.Robot) ? Backgrounds[0] :
+		EnumUtility.HasFlag(level.EnemyTypes, EnemyGeneration.Plants) ? Backgrounds[1] :
 		Backgrounds[2];
 }
 

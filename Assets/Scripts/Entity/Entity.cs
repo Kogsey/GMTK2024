@@ -69,7 +69,7 @@ public abstract class Entity : MonoBehaviour
 		get => _highlight; set
 		{
 			_highlight = value;
-			SpriteRenderer.color = TargetColour;
+			DrawColour = TargetColour;
 		}
 	}
 
@@ -81,11 +81,14 @@ public abstract class Entity : MonoBehaviour
 		get => _evasionChance; set
 		{
 			_evasionChance = value;
-			SpriteRenderer.color = TargetColour;
+			DrawColour = TargetColour;
 		}
 	}
 
 	public abstract Color HighlightColour { get; }
+	protected virtual Color DrawColour { set => SpriteRenderer.color = value; }
+
+	protected virtual Vector3 BaseScale => Vector3.one * 4;
 	public Color TargetColour => (Highlight ? HighlightColour : Color.white).WithAlpha(1f - _evasionChance / 100f);
 	public List<IEntityEffect<Entity>> Effects { get; } = new List<IEntityEffect<Entity>>();
 	public bool PauseAnimation { get; set; } = false;
@@ -163,7 +166,7 @@ public abstract class Entity : MonoBehaviour
 	public virtual IEnumerator DeathEffect()
 	{
 		StartCoroutine(OnHitEffect());
-		SpriteRenderer.color = Color.red;
+		DrawColour = Color.red;
 		for (int i = 0; i < 10; i++)
 		{
 			transform.Rotate(Vector3.forward, 1f);
@@ -176,9 +179,9 @@ public abstract class Entity : MonoBehaviour
 		for (int i = 0; i < 10; i++)
 		{
 			yield return new WaitForSeconds(0.05f);
-			SpriteRenderer.color = Color.gray;
+			DrawColour = Color.gray;
 			yield return new WaitForSeconds(0.05f);
-			SpriteRenderer.color = TargetColour;
+			DrawColour = TargetColour;
 		}
 	}
 
@@ -203,9 +206,9 @@ public abstract class Entity : MonoBehaviour
 
 	public IEnumerator DodgeEffect()
 	{
-		SpriteRenderer.color = new Color(0, 0, 0, 0);
+		DrawColour = new Color(0, 0, 0, 0);
 		yield return new WaitForSeconds(0.5f);
-		SpriteRenderer.color = TargetColour;
+		DrawColour = TargetColour;
 	}
 
 	#endregion Effects
@@ -240,7 +243,7 @@ public abstract class Entity : MonoBehaviour
 
 		if (!PauseAnimation)
 		{
-			SpriteRenderer.transform.localScale = Vector3.one * 4;
+			SpriteRenderer.transform.localScale = BaseScale;
 			SpriteRenderer.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 			UpdateAnimations();
 		}

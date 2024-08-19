@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0bca92a1f803c4745aacbc2e23eba571
+guid: 01f743e30dbf2a948b003d279898afde
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8344324037188607793
-    second: Background3_0
+      213: 2136297236069658017
+    second: Feint_0
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Background3_0
+      name: Heal_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 480
-        height: 270
+        x: 117
+        y: 1034
+        width: 1442
+        height: 977
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,8 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 13f516f608efcc370800000000000000
-      internalID: 8344324037188607793
+      spriteID: d4741f4aeba8c4820800000000000000
+      internalID: 2903848411162822477
       vertices: []
       indices: 
       edges: []
@@ -141,7 +141,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Background3_0: 8344324037188607793
+      Heal_0: 2903848411162822477
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -4,17 +4,24 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CardBehave : MonoBehaviour
+public abstract class BaseCardBehave : MonoBehaviour
 {
-	private CardData card;
-
 	public Vector2 RootPosition { get; set; }
+	public Vector2 RootScale { get; set; } = Vector2.one;
 
 	public Vector2 Position
 	{
 		get => (Vector2)transform.position;
 		set => transform.position = (Vector3)value;
 	}
+
+	public Vector2 Scale
+	{
+		get => (Vector2)transform.localScale;
+		set => transform.localScale = (Vector3)value;
+	}
+
+	private CardData card;
 
 	public CardData Card
 	{
@@ -28,7 +35,7 @@ public class CardBehave : MonoBehaviour
 
 	public SpriteRenderer Border;
 	public SpriteRenderer CardBack;
-	public SpriteRenderer CardBackground;
+	public SpriteRenderer CardArt;
 
 	public Canvas Canvas;
 	public Collider2D Collider;
@@ -41,25 +48,62 @@ public class CardBehave : MonoBehaviour
 	{
 		set
 		{
-			//CardBackground.sortingOrder = value * 5 - 1;
-			Border.sortingOrder = value * 5;
-			Canvas.sortingOrder = value * 5 + 1;
+			CardArt.sortingOrder = value * 10 - 1;
+			Border.sortingOrder = value * 10;
+			Canvas.sortingOrder = value * 10 + 1;
 		}
 	}
 
 	private void RegenCard()
 	{
-		Border.sprite = Singleton<CardManager>.instance.Borders[(int)card.Rarity];
-		Name.text = card.Name;
-		Description.text = string.Format(card.Description, card.CurrentValue);
-		Actions.text = card.Energy.ToString();
+		Border.sprite = SpriteBank.Instance.GetBorder(Card.Rarity);
+		CardArt.sprite = Card.CardArt;
+		Name.text = Card.Name;
+		Description.text = string.Format(card.Description, Card.CurrentValue);
+		Actions.text = Card.Energy.ToString();
 	}
+
+	public Coroutine ReturnRoutine { get; protected set; }
+
+	public void StartMoveToRoot()
+		=> ReturnRoutine ??= StartCoroutine(MoveToRoot());
+
+	public virtual void ForceMoveToRoot()
+		=> StartMoveToRoot();
+
+	public IEnumerator MoveToRoot()
+	{
+		while (Vector2.Distance(Position, RootPosition) > 0.1f)
+		{
+			Position = Helpers.SmoothInterpolate(Position, RootPosition);
+			Scale = Helpers.SmoothInterpolate(Scale, RootScale);
+			yield return null;
+		}
+		Position = RootPosition;
+		Scale = RootScale;
+		ReturnRoutine = null;
+	}
+}
+
+public class CardBehave : BaseCardBehave
+{
 	public int PopDistance = 10;
 	private Vector2 PopupTarget => RootPosition + new Vector2(0, PopDistance);
 	public static bool IgnoreNewInteract { get; set; }
 
 	private Coroutine MouseDragRoutine;
-	public Coroutine ReturnRoutine { get; private set; }
+
+	public override void ForceMoveToRoot()
+	{
+		if (MouseDragRoutine != null)
+		{
+			StopCoroutine(MouseDragRoutine);
+			MouseDragRoutine = null;
+		}
+		ResetTargetColour();
+		base.ForceMoveToRoot();
+	}
+
 	public void OnMouseExit()
 	{
 		if (!IgnoreNewInteract)
@@ -97,7 +141,7 @@ public class CardBehave : MonoBehaviour
 			MouseDragRoutine = null;
 			if (currentTarget != null)
 			{
-				currentTarget.Highlight = false;
+				ResetTargetColour();
 				StartCoroutine(PlayAndDiscard(currentTarget));
 			}
 			else
@@ -117,8 +161,7 @@ public class CardBehave : MonoBehaviour
 			DropTarget(out Entity target);
 			if (currentTarget != target)
 			{
-				if (currentTarget != null)
-					currentTarget.Highlight = false;
+				ResetTargetColour();
 				currentTarget = target;
 				if (currentTarget != null)
 					currentTarget.Highlight = true;
@@ -128,25 +171,18 @@ public class CardBehave : MonoBehaviour
 		}
 	}
 
-	public void StartMoveToRoot()
-		=> ReturnRoutine ??= StartCoroutine(MoveToRoot());
-
-	public IEnumerator MoveToRoot()
+	private void ResetTargetColour()
 	{
-		while (Vector2.Distance(Position, RootPosition) > 0.1f)
-		{
-			Position = Helpers.SmoothInterpolate(Position, RootPosition);
-			yield return null;
-		}
-		Position = RootPosition;
-		ReturnRoutine = null;
+		if (currentTarget != null)
+			currentTarget.Highlight = false;
 	}
 
 	public IEnumerator PlayAndDiscard(Entity target)
 	{
 		Collider.enabled = false;
-		Singleton<Player>.instance.SetNextCard(card, target);
+		Singleton<Player>.instance.SetNextCard(Card, target);
 		Singleton<CardManager>.instance.PlayedCard(this);
+		yield return ReturnRoutine;
 		Destroy(gameObject);
 		yield return null;
 	}
@@ -158,9 +194,9 @@ public class CardBehave : MonoBehaviour
 		float bestDistance = DropRange;
 		target = null;
 
-		foreach (Entity entity in Singleton<GameManager>.instance.AllCardTargets)
+		foreach (Entity entity in Singleton<LevelManager>.instance.AllCardTargets)
 		{
-			if (card.CanPlayCard(entity))
+			if (Card.CanPlayCard(entity))
 			{
 				float myDistance = Vector2.Distance(entity.transform.position, transform.position);
 				if (myDistance < bestDistance)

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568d95a79e92f8c418e43746e125ae68, type: 3}
   m_Name: Armour Up
   m_EditorClassIdentifier: 
-  Drawable: 1
+  Drawable: 0
+  CardArt: {fileID: 21300000, guid: a5b88c13dcb2e954ea8ea9a4917d5d69, type: 3}
   Name: Armour Up
   Description: Gain {0} block
   Energy: 1

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Power Scaling
   m_EditorClassIdentifier: 
   Drawable: 1
+  CardArt: {fileID: 21300000, guid: 5439f985acd5a194f8b643a6a05dcb01, type: 3}
   Name: Power Scaling
   Description: Gain {0} block
   Energy: 3

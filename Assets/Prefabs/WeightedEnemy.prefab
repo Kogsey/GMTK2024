@@ -85,7 +85,6 @@ MonoBehaviour:
   Block: 0
   MaxHealth: 0
   StackingEvade: 0
-  AnimationEffects: 0
   SpriteRenderer: {fileID: 5067571379239522624}
   HealthBar: {fileID: 6617287140681903419}
   EffectsHolder: {fileID: 2562348912542102099}
@@ -136,10 +135,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8578817299938269516}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd71ae4130934e345a3d72ee0e15dd01, type: 3}
+  m_Script: {fileID: 11500000, guid: d5bd01b8f16dcf049a710d726a450d0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AssumeWidth: 0.14
+  AssumeWidth: 0.15
 --- !u!1 &9200812239286602393
 GameObject:
   m_ObjectHideFlags: 0

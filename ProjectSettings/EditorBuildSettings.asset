@@ -8,5 +8,14 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/CardPickScene.unity
+    guid: 15d461e5d703c73468cc1e0d7275c6d6
+  - enabled: 1
+    path: Assets/Scenes/Map.unity
+    guid: 17d30021ec49f53468d64c8c8ee6b621
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: a68b77e45ea04914798c739d8aa57f12
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

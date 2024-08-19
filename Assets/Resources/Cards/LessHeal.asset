@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LessHeal
   m_EditorClassIdentifier: 
   Drawable: 1
+  CardArt: {fileID: 21300000, guid: c127afafc16319b4da82c158dd9a20f9, type: 3}
   Name: Lesser Replicate
   Description: Gain {0} temportary health. This card is then less effective.
   Energy: 1

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Double Wack
   m_EditorClassIdentifier: 
   Drawable: 1
+  CardArt: {fileID: 21300000, guid: 899008d187e2200459aec91d11e2960a, type: 3}
   Name: Double Whack
   Description: Hit an enemy dealing {0} damage twice
   Energy: 1

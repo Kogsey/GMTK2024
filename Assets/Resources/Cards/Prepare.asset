@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Prepare
   m_EditorClassIdentifier: 
   Drawable: 1
+  CardArt: {fileID: 21300000, guid: 096d04c0e7e53ca4ebc7af43ee62cf82, type: 3}
   Name: Prepare
   Description: Gain {0} energy next turn
   Energy: 1

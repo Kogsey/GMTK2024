@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Shrink
   m_EditorClassIdentifier: 
   Drawable: 1
-  Name: Whip
+  CardArt: {fileID: 21300000, guid: f970a002d3dccec46a2964c44ec56fc8, type: 3}
+  Name: Shrink
   Description: Gain a {0}% chance to avoid an attack
   Energy: 1
   BaseRarity: 1

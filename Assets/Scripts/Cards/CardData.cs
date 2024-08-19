@@ -41,7 +41,8 @@ public class CardData : ScriptableObject
 	/// <summary> If the card can be drawn from the greater pool </summary>
 	public bool Drawable = false;
 
-	public CardData RootCard { get; private set; }
+	public CardData DeckCard { get; private set; }
+	public Sprite CardArt;
 	public string Name;
 	public string Description;
 	public int Energy;
@@ -56,8 +57,7 @@ public class CardData : ScriptableObject
 	public CardData Clone()
 	{
 		CardData clone = (CardData)MemberwiseClone();
-		if (RootCard == null)
-			clone.RootCard = this;
+		clone.DeckCard = this;
 		return clone;
 	}
 
@@ -104,6 +104,10 @@ public class CardData : ScriptableObject
 	public IEnumerator PlayCard(Player player, Entity Target)
 	{
 		player.Energy -= Energy;
+
+		if (name == "Power Scaling")
+			player.AddAnimation(new PowerScalingAnimation());
+
 		switch (CardType)
 		{
 			case CardType.Attack:
@@ -121,7 +125,7 @@ public class CardData : ScriptableObject
 
 			case CardType.AoE:
 				player.StartCoroutine(player.AttackAnimation(1));
-				IEnumerable<Coroutine> routines = Singleton<GameManager>.instance.Enemies.Select(enemy => player.StartCoroutine(enemy.Damage(player, CurrentValue)));
+				IEnumerable<Coroutine> routines = Singleton<LevelManager>.instance.Enemies.Select(enemy => player.StartCoroutine(enemy.Damage(player, CurrentValue)));
 				foreach (Coroutine coroutine in routines)
 					yield return coroutine;
 				break;
@@ -146,22 +150,24 @@ public class CardData : ScriptableObject
 			case CardType.Heal:
 				player.Health += CurrentValue;
 				player.Health = Math.Min(player.Health, player.MaxHealth);
-				RootCard.CurrentValue /= 2;
-				if (RootCard.CurrentValue < 1)
-					RootCard.CurrentValue = 1;
+				CurrentValue /= 2;
+				DeckCard.CurrentValue /= 2;
+				if (DeckCard.CurrentValue < 1)
+					DeckCard.CurrentValue = 1;
 				break;
 
 			case CardType.HealthBuffer:
 				player.Absorption += CurrentValue;
-				RootCard.CurrentValue /= 2;
-				if (RootCard.CurrentValue < 1)
-					RootCard.CurrentValue = 1;
+				CurrentValue /= 2;
+				DeckCard.CurrentValue /= 2;
+				if (DeckCard.CurrentValue < 1)
+					DeckCard.CurrentValue = 1;
 				break;
 
 			case CardType.FaultyReplicate:
 				player.StartCoroutine(player.OnHitEffect());
 				player.Health -= CurrentValue;
-				player.DamageMultiplier += 1;
+				yield return player.InflictEffect(new DamageModMultiplier(2, IconIDs.Sword));
 				break;
 
 			case CardType.Prepare:

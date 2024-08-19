@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 568d95a79e92f8c418e43746e125ae68, type: 3}
   m_Name: Whack
   m_EditorClassIdentifier: 
-  Drawable: 1
+  Drawable: 0
+  CardArt: {fileID: 21300000, guid: f1a5bf4ac61fa64488d8e9bb11affbab, type: 3}
   Name: Whack
   Description: Hit an enemy dealing {0} damage
   Energy: 1

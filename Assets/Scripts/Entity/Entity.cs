@@ -227,6 +227,7 @@ public abstract class Entity : MonoBehaviour
 			yield return Effects[index].OnTurnEnd(this);
 			if (Effects[index].TurnsLeft <= 0)
 			{
+				Effects[index].RemoveIcon();
 				Effects.RemoveAt(index);
 				index--;
 			}
@@ -252,6 +253,7 @@ public abstract class Entity : MonoBehaviour
 	public virtual IEnumerator InflictEffect(IEntityEffect<Entity> effect)
 	{
 		Effects.Add(effect);
+		effect.SetupIcon(EffectsHolder.transform);
 		yield return effect.OnInflict(this);
 	}
 }

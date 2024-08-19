@@ -22,6 +22,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 	public WeightedActionEnemy Prefab;
 	public RectTransform EnemyParent;
 	public Player Player;
+	public SpriteRenderer IconPrefab;
 	public bool LevelIsOver { get; set; }
 
 	public enum RoundState

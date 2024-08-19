@@ -167,7 +167,7 @@ public class CardData : ScriptableObject
 			case CardType.FaultyReplicate:
 				player.StartCoroutine(player.OnHitEffect());
 				player.Health -= CurrentValue;
-				yield return player.InflictEffect(new DamageModMultiplier(2, IconIDs.Sword));
+				yield return player.InflictEffect(new DamageModMultiplier(2, IconID.Sword));
 				break;
 
 			case CardType.Prepare:

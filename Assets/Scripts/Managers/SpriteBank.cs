@@ -22,10 +22,10 @@ public class SpriteBank : MonoBehaviour
 	public SpriteRenderer IconPrefab;
 	public Sprite[] Sprites;
 
-	public Sprite GetSprite(IconIDs id)
+	public Sprite GetSprite(IconID id)
 		=> Sprites[(int)id];
 
-	public SpriteRenderer GetSpiteObject(IconIDs id, Transform parent)
+	public SpriteRenderer GetSpiteObject(IconID id, Transform parent)
 	{
 		SpriteRenderer spriteRenderer = Instantiate(IconPrefab, parent);
 		spriteRenderer.sprite = GetSprite(id);
@@ -45,7 +45,7 @@ public class SpriteBank : MonoBehaviour
 		Backgrounds[2];
 }
 
-public enum IconIDs
+public enum IconID
 {
 	Heart,
 	DeathHeart,

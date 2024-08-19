@@ -19,17 +19,17 @@ public enum WeightedEnemyActionType
 
 public class WeightedActionEnemy : Enemy
 {
-	public IconIDs ActionToHint(WeightedEnemyActionType weightedEnemyAction)
+	public IconID ActionToHint(WeightedEnemyActionType weightedEnemyAction)
 		=> weightedEnemyAction switch
 		{
-			WeightedEnemyActionType.Attack => IconIDs.Sword,
-			WeightedEnemyActionType.Block => IconIDs.ShieldCircle,
-			WeightedEnemyActionType.Evade => IconIDs.BlueLightning,
-			WeightedEnemyActionType.BigAttack => IconIDs.Hammer,
-			WeightedEnemyActionType.Weaken => IconIDs.PurpleSwirl,
-			WeightedEnemyActionType.Burn => IconIDs.Fire,
-			WeightedEnemyActionType.Heal => IconIDs.Heart,
-			WeightedEnemyActionType.ElectricAttack => IconIDs.Lightning,
+			WeightedEnemyActionType.Attack => IconID.Sword,
+			WeightedEnemyActionType.Block => IconID.ShieldCircle,
+			WeightedEnemyActionType.Evade => IconID.BlueLightning,
+			WeightedEnemyActionType.BigAttack => IconID.Hammer,
+			WeightedEnemyActionType.Weaken => IconID.PurpleSwirl,
+			WeightedEnemyActionType.Burn => IconID.Fire,
+			WeightedEnemyActionType.Heal => IconID.Heart,
+			WeightedEnemyActionType.ElectricAttack => IconID.Lightning,
 			_ => throw new NotImplementedException(),
 		};
 
@@ -51,7 +51,7 @@ public class WeightedActionEnemy : Enemy
 
 	private List<GenericEnemyAction> ActionPool;
 	private GenericEnemyAction NextAction;
-	public override IconIDs DisplayAction => ActionToHint(NextAction.ActionDisplay);
+	public override IconID DisplayAction => ActionToHint(NextAction.ActionDisplay);
 	public override int DisplayActionCount => NextAction.Amount;
 
 	public override IEnumerator Turn()
@@ -79,13 +79,16 @@ public class WeightedActionEnemy : Enemy
 			case WeightedEnemyActionType.BigAttack:
 				goto case WeightedEnemyActionType.Attack;
 
-			case WeightedEnemyActionType.Weaken: // TODO
+			case WeightedEnemyActionType.Weaken:
+				yield return Singleton<Player>.instance.InflictEffect(new DamageModMultiplier(0.5f, IconID.PurpleSwirl));
 				break;
 
-			case WeightedEnemyActionType.Burn: // TODO
+			case WeightedEnemyActionType.Burn:
+				yield return Singleton<Player>.instance.InflictEffect(new DoTEffect(3, 3, IconID.Fire));
 				break;
 
 			case WeightedEnemyActionType.ElectricAttack:
+				yield return Singleton<Player>.instance.InflictEffect(new DoTEffect(2, 3, IconID.Lightning));
 				break;
 
 			default:

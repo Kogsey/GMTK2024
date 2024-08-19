@@ -1,9 +1,11 @@
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEngine;
 
 public interface IEntityEffect<in T> where T : Entity
 {
-	public IconIDs IconID { get; }
-
+	public IconID IconID { get; }
+	public SpriteRenderer Icon { get; set; }
 	public int TurnsLeft { get; set; }
 
 	public IEnumerator OnTurnEnd(T entity)
@@ -24,18 +26,34 @@ public interface IEntityEffect<in T> where T : Entity
 
 public class DamageModMultiplier : IEntityEffect<Entity>
 {
-	public DamageModMultiplier(float multiplier, IconIDs icon)
+	public DamageModMultiplier(float multiplier, IconID icon)
 	{
 		Multiplier = multiplier;
 		IconID = icon;
 	}
 
 	public float Multiplier { get; }
-	public IconIDs IconID { get; }
-	public int TurnsLeft { get; set; }
+	public IconID IconID { get; }
+	public int TurnsLeft { get; set; } = 1;
+	public SpriteRenderer Icon { get; set; }
 
 	public float ModifyDamage(float damage)
 		=> (int)(damage * Multiplier);
+}
+
+public class DoTEffect : IEntityEffect<Entity>
+{
+	public DoTEffect(int DoT, int turnsLeft, IconID iconID)
+	{
+		DamagePerTurn = DoT;
+		IconID = iconID;
+		TurnsLeft = turnsLeft;
+	}
+
+	public SpriteRenderer Icon { get; set; }
+	public IconID IconID { get; }
+	public int TurnsLeft { get; set; }
+	public int DamagePerTurn { get; }
 }
 
 /// <summary> Animations should be additive and not interfere with other animations </summary>
@@ -54,4 +72,14 @@ public static class Extensions
 		while (!animation.Complete)
 			yield return null;
 	}
+
+	public static void SetupIcon<T>(this IEntityEffect<T> effect, Transform parent) where T : Entity
+	{
+		SpriteRenderer renderer = Object.Instantiate(Singleton<LevelManager>.instance.IconPrefab, parent);
+		effect.Icon = renderer;
+		effect.Icon.sprite = SpriteBank.Instance.GetSprite(effect.IconID);
+	}
+
+	public static void RemoveIcon<T>(this IEntityEffect<T> effect) where T : Entity
+		=> Object.Destroy(effect.Icon);
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bigger Whack
   m_EditorClassIdentifier: 
   Drawable: 1
+  CardArt: {fileID: 21300000, guid: f27fcd609a3d667408fa8d4bd4c2af89, type: 3}
   Name: Bigger Whack
   Description: Hit an enemy dealing {0} damage
   Energy: 2

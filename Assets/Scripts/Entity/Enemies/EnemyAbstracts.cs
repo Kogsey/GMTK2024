@@ -18,7 +18,7 @@ public abstract class Enemy : Entity
 {
 	public override Color HighlightColour => Color.red * Color.white;
 	public SpriteRenderer MoveSprite;
-	public abstract IconIDs DisplayAction { get; }
+	public abstract IconID DisplayAction { get; }
 	public abstract int DisplayActionCount { get; }
 
 	public override IEnumerator DeathEffect()

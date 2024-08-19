@@ -15,10 +15,16 @@ public class CardManager : MonoBehaviour, ISingleton
 	public TextMeshProUGUI DiscardText;
 	public Transform Canvas;
 
+	public CardData[] DebugDeck;
+	public List<CardData> GameDeck { get; private set; } = new List<CardData>();
+	public List<CardBehave> Hand { get; } = new List<CardBehave>();
+	public List<CardData> DiscardDeck { get; private set; } = new List<CardData>();
+
 	private void CopyDeck()
 	{
 		GameDeck.Clear();
 		GameDeck.AddRange(CampaignState.Instance.Deck.Select(card => card.Clone()));
+		GameDeck.AddRange(DebugDeck);
 		Shuffle(GameDeck);
 	}
 
@@ -120,10 +126,6 @@ public class CardManager : MonoBehaviour, ISingleton
 		CopyDeck();
 		DrawingHand = StartCoroutine(DrawHand(HandSize));
 	}
-
-	public List<CardData> GameDeck { get; private set; } = new List<CardData>();
-	public List<CardBehave> Hand { get; } = new List<CardBehave>();
-	public List<CardData> DiscardDeck { get; private set; } = new List<CardData>();
 
 	public IEnumerator EndRound()
 	{

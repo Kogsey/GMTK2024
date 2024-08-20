@@ -28,6 +28,6 @@ MonoBehaviour:
     Amount: 5
     Weight: 1
   - ActionDisplay: 4
-    Amount: 20
+    Amount: 15
     Weight: 1
   MinLevel: 13

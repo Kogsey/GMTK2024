@@ -25,6 +25,6 @@ MonoBehaviour:
     Amount: 2
     Weight: 1
   - ActionDisplay: 0
-    Amount: 10
+    Amount: 6
     Weight: 2
   MinLevel: 1

@@ -203,7 +203,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 950812958}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1008685050}
+        m_TargetAssemblyTypeName: CampaignState, Assembly-CSharp
+        m_MethodName: RestartCampaign
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &950812958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,7 +272,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
       propertyPath: m_AnchorMax.x
@@ -350,23 +362,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: PersistantManagerObject
       objectReference: {fileID: 0}
-    - target: {fileID: 8662410035073331682, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 25
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1307907700}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
---- !u!224 &1008685049 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
+--- !u!20 &1008685049 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8673683167816476608, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
   m_PrefabInstance: {fileID: 1008685048}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1008685050 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4773905101225063793, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
+  m_PrefabInstance: {fileID: 1008685048}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25456f7052bd19e40a07e3923d5f0a09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1012990134
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +585,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1307907699
 GameObject:
@@ -599,21 +615,21 @@ RectTransform:
   m_GameObject: {fileID: 1307907699}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1713318585}
   - {fileID: 1012990135}
   - {fileID: 950812956}
   - {fileID: 1970125085}
-  m_Father: {fileID: 1008685049}
-  m_RootOrder: -1
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012207031, y: -0.0002593994}
-  m_SizeDelta: {x: 415.08, y: 135.67}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1307907701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,8 +679,8 @@ Canvas:
   m_GameObject: {fileID: 1307907699}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 1008685049}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1030,7 +1046,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1970125087}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1008685050}
+        m_TargetAssemblyTypeName: CampaignState, Assembly-CSharp
+        m_MethodName: MainMenuLose
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1970125087
 MonoBehaviour:
   m_ObjectHideFlags: 0

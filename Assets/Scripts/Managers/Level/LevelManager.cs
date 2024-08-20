@@ -115,6 +115,24 @@ public class LevelManager : MonoBehaviour, ISingleton
 			if (enemy.Health > 0)
 				enemiesDead = false;
 		}
+		if (enemiesDead)
+		{
+			if (CampaignState.GetLevelData().SunBoss)
+			{
+				SceneManager.LoadScene("Win Game", LoadSceneMode.Single);
+				CampaignState.OnEndState();
+			}
+			else
+			{
+				SceneManager.LoadScene("CardPickScene", LoadSceneMode.Single);
+				CampaignState.OnEndState();
+			}
+		}
+		else if (Player.Health <= 0)
+		{
+			SceneManager.LoadScene("Lose Game", LoadSceneMode.Single);
+			CampaignState.OnEndState();
+		}
 		return enemiesDead || Player.Health <= 0;
 	}
 
@@ -150,10 +168,4 @@ public class LevelManager : MonoBehaviour, ISingleton
 
 	private T GetRandom<T>(IEnumerable<T> values)
 		=> values.ElementAt(Random.Range(0, values.Count()));
-
-	public void Update()
-	{
-		if (LevelIsOver)
-			SceneManager.LoadScene("CardPickScene", LoadSceneMode.Single);
-	}
 }

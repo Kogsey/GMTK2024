@@ -140,6 +140,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardGenPicker (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3284064292248232509, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Size.y
+      value: 28.544437
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284064292248232509, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Offset.y
+      value: -2.272215
+      objectReference: {fileID: 0}
     - target: {fileID: 5383801603482515088, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -158,7 +166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_AnchorMax.x
@@ -244,6 +252,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6957027928509977809, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: ButtonType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6957027928509977809, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: IsMainMenu
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8230141122581749641, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_text
       value: Play the game on Endless Mode.
@@ -275,7 +291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
       propertyPath: m_AnchorMax.x
@@ -371,15 +387,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 753093146}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
---- !u!224 &356491902 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4666323773942218906, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
+--- !u!20 &356491902 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 8673683167816476608, guid: 58e12e1851c3ace47b93e6cec5ab3079, type: 3}
   m_PrefabInstance: {fileID: 356491901}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &387313402
@@ -411,7 +424,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &429569372
 GameObject:
@@ -698,20 +711,20 @@ RectTransform:
   m_GameObject: {fileID: 753093145}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1602303519}
   - {fileID: 664816242}
   - {fileID: 1765902756}
-  m_Father: {fileID: 356491902}
-  m_RootOrder: -1
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0012207031, y: -0.0002593994}
-  m_SizeDelta: {x: 415.08, y: 135.67}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &753093147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,8 +774,8 @@ Canvas:
   m_GameObject: {fileID: 753093145}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 356491902}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -930,6 +943,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardGenPicker
       objectReference: {fileID: 0}
+    - target: {fileID: 3284064292248232509, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Size.y
+      value: 28.09496
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284064292248232509, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Offset.y
+      value: -2.0474796
+      objectReference: {fileID: 0}
     - target: {fileID: 5383801603482515088, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -944,7 +965,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1030,6 +1051,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6957027928509977809, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: IsMainMenu
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8230141122581749641, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_text
       value: Play the game on Story Mode.
@@ -1063,6 +1088,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: CardGenPicker (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3284064292248232509, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Size.y
+      value: 28.319696
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284064292248232509, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Offset.y
+      value: -2.1598482
+      objectReference: {fileID: 0}
     - target: {fileID: 5383801603482515088, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -1077,7 +1110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1162,6 +1195,14 @@ PrefabInstance:
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6957027928509977809, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: ButtonType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6957027928509977809, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: IsMainMenu
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8230141122581749641, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_text
@@ -1499,5 +1540,5 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

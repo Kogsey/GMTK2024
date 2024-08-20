@@ -222,6 +222,27 @@ public class CampaignState : MonoBehaviour
 		MapData = MapData.GenerateMap();
 	}
 
+	public static void OnEndState()
+		=> SpriteBank.Instance.BackgroundRenderer.color = new Color(38f / 255, 38f / 255, 38f / 255);
+
+	public static void RestartCampaign()
+	{
+		EraseCampaign();
+		SceneManager.LoadScene("Map");
+	}
+
+	public static void MainMenuLose()
+	{
+		EraseCampaign();
+		SceneManager.LoadScene("MainMenu");
+	}
+
+	public static void MainMenuWin()
+	{
+		EraseCampaign();
+		SceneManager.LoadScene("MainMenu");
+	}
+
 	public static void EraseCampaign()
 	{
 		if (Instance != null)

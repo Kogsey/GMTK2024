@@ -1,7 +1,18 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PickCardBehave : BaseCardBehave
 {
+	public bool IsMainMenu;
+
+	public enum MainMenuButton
+	{
+		Campaign,
+		Endless,
+		Settings,
+	}
+
+	public MainMenuButton ButtonType;
 	public int PopDistance = 10;
 	private Vector2 PopupTarget => RootPosition + new Vector2(0, PopDistance);
 	public static bool IgnoreNewInteract { get; set; }
@@ -9,7 +20,8 @@ public class PickCardBehave : BaseCardBehave
 	public void Awake()
 	{
 		RootPosition = Position;
-		Card = CampaignState.Instance.PickRandomCard();
+		if (!IsMainMenu)
+			Card = CampaignState.Instance.PickRandomCard();
 		IgnoreNewInteract = false;
 	}
 
@@ -36,9 +48,32 @@ public class PickCardBehave : BaseCardBehave
 	{
 		if (!IgnoreNewInteract)
 		{
-			IgnoreNewInteract = true;
-			CampaignState.Instance.Deck.Add(Card);
-			CampaignState.PostCardPicked();
+			if (!IsMainMenu)
+			{
+				IgnoreNewInteract = true;
+				CampaignState.Instance.Deck.Add(Card);
+				CampaignState.PostCardPicked();
+			}
+			else
+			{
+				switch (ButtonType)
+				{
+					case MainMenuButton.Campaign:
+						SceneManager.LoadScene("Map");
+						break;
+
+					case MainMenuButton.Endless:
+						SceneManager.LoadScene("BattleScreen");
+						break;
+
+					case MainMenuButton.Settings:
+						SceneManager.LoadScene("Settings");
+						break;
+
+					default:
+						throw new System.NotImplementedException();
+				}
+			}
 		}
 	}
 }

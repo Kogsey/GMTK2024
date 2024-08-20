@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9443f8a29d4b647b53f03ccc308398, type: 3}
   m_Name: Robot_Spider1
   m_EditorClassIdentifier: 
+  HeightMultiplier: 1
   MinHealth: 20
   MaxHealth: 30
   StartBlock: 0
@@ -25,5 +26,8 @@ MonoBehaviour:
     Weight: 3
   - ActionDisplay: 1
     Amount: 10
+    Weight: 1
+  - ActionDisplay: 7
+    Amount: 2
     Weight: 1
   MinLevel: 2

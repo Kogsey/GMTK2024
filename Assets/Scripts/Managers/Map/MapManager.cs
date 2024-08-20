@@ -27,6 +27,7 @@ public class MapManager : MonoBehaviour, ISingleton
 
 	public void Awake()
 	{
+		SpriteBank.Instance.SetBackgroundColourDark();
 		MapData = CampaignState.Instance.MapData;
 		foreach (IEnumerable<MapNode> mapNodeLayer in MapData)
 		{

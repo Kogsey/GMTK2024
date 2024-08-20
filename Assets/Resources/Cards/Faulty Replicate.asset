@@ -16,7 +16,7 @@ MonoBehaviour:
   CardArt: {fileID: 21300000, guid: cfb58460e746a884cb51208f63d2d177, type: 3}
   Name: Faulty Replicate
   Description: Deal 2x damage this turn at cost of {0} health
-  Energy: 1
+  Energy: 0
   BaseRarity: 2
   MinValue: 5
   MaxValue: 10

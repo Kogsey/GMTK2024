@@ -87,6 +87,12 @@ public class Player : Entity, ISingleton
 		yield return base.ResetStats();
 	}
 
+	public override IEnumerator PreTurnEffects()
+	{
+		foreach (IEntityEffect<Player> effect in Effects)
+			yield return effect.OnTurnStart(this);
+	}
+
 	public void Awake()
 	{
 		MaxHealth = CampaignState.Instance.PlayerHealthMax;
@@ -113,6 +119,46 @@ public class Player : Entity, ISingleton
 
 	public override void AddAnimation(IEntityAnimation<Entity> animation)
 		=> AddAnimation(animation);
+
+	private List<IEntityEffect<Player>> Effects { get; } = new List<IEntityEffect<Player>>();
+
+	public override float ModifyDamage(float damage)
+	{
+		foreach (IEntityEffect<Player> effect in Effects)
+			damage = effect.ModifyDamage(damage);
+		return damage;
+	}
+
+	public override IEnumerator InflictEffect(IEntityEffect<Entity> effect)
+		=> InflictEffect(effect);
+
+	public IEnumerator InflictEffect(IEntityEffect<Player> effect)
+	{
+		Effects.Add(effect);
+		effect.SetupIcon(EffectsHolder.transform);
+		yield return effect.OnInflict(this);
+	}
+
+	protected override IEnumerator PostTurnEffects()
+	{
+		for (int index = 0; index < Effects.Count; index++)
+		{
+			yield return Effects[index].OnTurnEnd(this);
+			if (Effects[index].TurnsLeft == 0)
+			{
+				Effects[index].RemoveIcon();
+				Effects.RemoveAt(index);
+				index--;
+			}
+		}
+	}
+
+	public override void ClearEffects()
+	{
+		foreach (IEntityEffect<Player> effect in Effects)
+			effect.RemoveIcon();
+		Effects.Clear();
+	}
 }
 
 public class PowerScalingAnimation : IEntityAnimation<Player>

@@ -12,17 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9443f8a29d4b647b53f03ccc308398, type: 3}
   m_Name: Space_SPACESHIP
   m_EditorClassIdentifier: 
-  MinHealth: 30
-  MaxHealth: 40
-  StartBlock: 0
+  HeightMultiplier: 1
+  MinHealth: 20
+  MaxHealth: 50
+  StartBlock: 10
   StartAbsorb: 0
-  GenerationData: 4
+  GenerationData: 12
   AnimationEffects: 5
   Sprite: {fileID: 167741073158513796, guid: c16ab405e425bf246a299d0bc333a4d9, type: 3}
   ActionPool:
-  - ActionDisplay: 2
+  - ActionDisplay: 1
     Amount: 10
     Weight: 3
+  - ActionDisplay: 7
+    Amount: 5
+    Weight: 1
   - ActionDisplay: 0
     Amount: 10
     Weight: 1

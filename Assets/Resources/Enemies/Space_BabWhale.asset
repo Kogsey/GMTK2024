@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9443f8a29d4b647b53f03ccc308398, type: 3}
   m_Name: Space_BabWhale
   m_EditorClassIdentifier: 
-  MinHealth: 30
-  MaxHealth: 40
+  HeightMultiplier: 1
+  MinHealth: 20
+  MaxHealth: 25
   StartBlock: 0
   StartAbsorb: 0
   GenerationData: 4
@@ -22,8 +23,8 @@ MonoBehaviour:
   ActionPool:
   - ActionDisplay: 2
     Amount: 50
-    Weight: 3
-  - ActionDisplay: 0
-    Amount: 1
+    Weight: 4
+  - ActionDisplay: 5
+    Amount: 3
     Weight: 1
   MinLevel: 0

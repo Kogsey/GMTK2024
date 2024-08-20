@@ -18,7 +18,7 @@ MonoBehaviour:
   Description: Hit an enemy dealing {0} damage twice
   Energy: 1
   BaseRarity: 1
-  MinValue: 4
-  MaxValue: 5
-  RareValue: 6
+  MinValue: 5
+  MaxValue: 8
+  RareValue: 10
   CardType: 4

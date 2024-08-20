@@ -7,6 +7,9 @@ public static class Helpers
 	public static Vector2 SmoothInterpolate(Vector2 a, Vector2 b, float decayScale = 16)
 		=> b + (a - b) * Mathf.Exp(-decayScale * Time.smoothDeltaTime);
 
+	public static float SmoothInterpolate(float a, float b, float decayScale = 16)
+		=> b + (a - b) * Mathf.Exp(-decayScale * Time.smoothDeltaTime);
+
 	public static Vector2 WorldMousePosition
 		=> Camera.main.ScreenToWorldPoint(Input.mousePosition);
 

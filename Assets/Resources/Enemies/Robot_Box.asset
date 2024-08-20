@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9443f8a29d4b647b53f03ccc308398, type: 3}
   m_Name: Robot_Box
   m_EditorClassIdentifier: 
+  HeightMultiplier: 1
   MinHealth: 10
   MaxHealth: 20
   StartBlock: 5
@@ -26,3 +27,4 @@ MonoBehaviour:
   - ActionDisplay: 1
     Amount: 10
     Weight: 1
+  MinLevel: 0

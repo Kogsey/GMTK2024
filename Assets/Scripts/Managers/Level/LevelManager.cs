@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -119,21 +120,19 @@ public class LevelManager : MonoBehaviour, ISingleton
 		}
 		if (enemiesDead)
 		{
+			CampaignState.Instance.PlayerHealth = Player.Health;
 			if (CampaignState.GetLevelData().SunBoss)
 			{
-				SceneManager.LoadScene("Win Game", LoadSceneMode.Single);
-				CampaignState.OnEndState();
+				SceneManager.LoadScene("WinGame", LoadSceneMode.Single);
 			}
 			else
 			{
 				SceneManager.LoadScene("CardPickScene", LoadSceneMode.Single);
-				CampaignState.OnEndState();
 			}
 		}
 		else if (Player.Health <= 0)
 		{
-			SceneManager.LoadScene("Lose Game", LoadSceneMode.Single);
-			CampaignState.OnEndState();
+			SceneManager.LoadScene("LoseGame", LoadSceneMode.Single);
 		}
 		return enemiesDead || Player.Health <= 0;
 	}
@@ -153,8 +152,8 @@ public class LevelManager : MonoBehaviour, ISingleton
 		else
 		{
 			IEnumerable<WeightedEnemyData> pool = levelData.Endless ? EnemyData : EnemyData.Where(enemy => EnumUtility.HasFlag(enemy.GenerationData, levelData.EnemyTypes) && enemy.MinLevel <= levelData.Level);
-
-			for (int i = 0; i < levelData.EnemyCount; i++)
+			int enemyCount = (int)math.lerp(1, 5, levelData.Difficulty / 10f);
+			for (int i = 0; i < enemyCount; i++)
 			{
 				WeightedActionEnemy weightedActionEnemy = Instantiate(Prefab, EnemyParent);
 				WeightedEnemyData data = GetRandom(pool);

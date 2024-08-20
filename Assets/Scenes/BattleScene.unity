@@ -739,6 +739,7 @@ GameObject:
   - component: {fileID: 1259012045}
   - component: {fileID: 1259012044}
   - component: {fileID: 1259012043}
+  - component: {fileID: 1259012046}
   m_Layer: 0
   m_Name: ManagerObject
   m_TagString: GameController
@@ -795,9 +796,7 @@ MonoBehaviour:
   DeckText: {fileID: 1878619006}
   DiscardText: {fileID: 256287222}
   Canvas: {fileID: 1982082645}
-  DebugDeck:
-  - {fileID: 11400000, guid: 1d002c9424189b64891c3cb616fde41e, type: 2}
-  - {fileID: 11400000, guid: d7f40b20550eef64d9ff14d51500b433, type: 2}
+  DebugDeck: []
   DeckPosition: {x: -50, y: -20}
   DiscardPosition: {x: 50, y: -20}
 --- !u!4 &1259012045
@@ -815,6 +814,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1259012046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259012041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95bf6d8ed787f844c969818ef1b608ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dark: 0
 --- !u!1 &1344015675
 GameObject:
   m_ObjectHideFlags: 0

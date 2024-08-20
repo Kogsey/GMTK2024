@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -98,53 +97,6 @@ public abstract class Entity : MonoBehaviour
 	}
 
 	public abstract float ModifyDamage(float damage);
-
-	public virtual IEnumerator Damage(Entity source, int damage, IEntityEffect<Entity> applyOnHit = null)
-	{
-		if (Health < 0)
-			yield break;
-
-		damage = (int)source.ModifyDamage(damage);
-
-		if (EvasionChance > 0)
-		{
-			if (Random.Range(0, 100) > EvasionChance)
-			{
-				StartCoroutine(DodgeEffect());
-				yield break;
-			}
-		}
-
-		EvasionChance += StackingEvade;
-
-		int newDamage = damage;
-		if (Block > 0)
-		{
-			int blockChange = math.min(Block, damage);
-			newDamage -= blockChange;
-			Block -= blockChange;
-		}
-
-		if (newDamage == 0)
-		{
-			StartCoroutine(BlockEffect());
-			yield break;
-		}
-
-		if (applyOnHit != null)
-			yield return InflictEffect(applyOnHit);
-
-		if (Absorption > 0)
-		{
-			int extraHealthChange = math.min(Absorption, damage);
-			newDamage -= extraHealthChange;
-			Absorption -= extraHealthChange;
-		}
-
-		Health -= newDamage;
-		StartCoroutine(Health <= 0 ? DeathEffect() : OnHitEffect());
-		yield return null;
-	}
 
 	#region Effects
 

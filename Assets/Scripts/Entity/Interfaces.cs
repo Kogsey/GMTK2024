@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -112,4 +113,55 @@ public static class Extensions
 
 	public static void RemoveIcon<T>(this IEntityEffect<T> effect) where T : Entity
 		=> Object.Destroy(effect.Icon.gameObject);
+
+	public static IEnumerator Damage<T>(this T victim, Entity source, int damage, IEntityEffect<T> applyOnHit = null) where T : Entity
+	{
+		if (victim.Health < 0)
+			yield break;
+
+		damage = (int)source.ModifyDamage(damage);
+
+		if (victim.EvasionChance > 0)
+		{
+			if (Helpers.PercentCheck(victim.EvasionChance))
+			{
+				victim.StartCoroutine(victim.DodgeEffect());
+				yield break;
+			}
+		}
+
+		victim.EvasionChance += victim.StackingEvade;
+
+		int newDamage = damage;
+		if (victim.Block > 0)
+		{
+			int blockChange = math.min(victim.Block, damage);
+			newDamage -= blockChange;
+			victim.Block -= blockChange;
+		}
+
+		if (newDamage == 0)
+		{
+			victim.StartCoroutine(victim.BlockEffect());
+			yield break;
+		}
+
+		if (applyOnHit != null)
+		{
+			yield return victim is Player player
+				? player.InflictEffect((IEntityEffect<Player>)applyOnHit)
+				: (object)victim.InflictEffect((IEntityEffect<Entity>)applyOnHit);
+		}
+
+		if (victim.Absorption > 0)
+		{
+			int extraHealthChange = math.min(victim.Absorption, damage);
+			newDamage -= extraHealthChange;
+			victim.Absorption -= extraHealthChange;
+		}
+
+		victim.Health -= newDamage;
+		victim.StartCoroutine(victim.Health <= 0 ? victim.DeathEffect() : victim.OnHitEffect());
+		yield return null;
+	}
 }

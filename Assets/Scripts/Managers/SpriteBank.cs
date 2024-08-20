@@ -40,13 +40,14 @@ public class SpriteBank : MonoBehaviour
 	public Sprite[] Backgrounds;
 
 	public void SetBackgroundColourDark()
-		=> BackgroundRenderer.color = Color.white;
+		=> BackgroundRenderer.color = new Color(38 / 255f, 38 / 255f, 38 / 255f);
 
 	public void SetBackgroundColourLight()
 		=> BackgroundRenderer.color = Color.white;
 
 	public void SetBackGround(LevelData level) => BackgroundRenderer.sprite =
 		level.SunBoss ? Backgrounds[3] :
+		level.Endless ? Backgrounds[Random.Range(0, 3)] :
 		EnumUtility.HasFlag(level.EnemyTypes, EnemyGeneration.Robot) ? Backgrounds[0] :
 		EnumUtility.HasFlag(level.EnemyTypes, EnemyGeneration.Plants) ? Backgrounds[1] :
 		Backgrounds[2];

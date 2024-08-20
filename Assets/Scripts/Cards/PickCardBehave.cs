@@ -59,11 +59,11 @@ public class PickCardBehave : BaseCardBehave
 				switch (ButtonType)
 				{
 					case MainMenuButton.Campaign:
-						SceneManager.LoadScene("StoryModeMessage");
+						CampaignState.StartCampaign();
 						break;
 
 					case MainMenuButton.Endless:
-						SceneManager.LoadScene("BattleScreen");
+						CampaignState.StartEndless();
 						break;
 
 					case MainMenuButton.HowToPlay:

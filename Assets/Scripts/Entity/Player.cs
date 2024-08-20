@@ -93,15 +93,12 @@ public class Player : Entity, ISingleton
 			yield return effect.OnTurnStart(this);
 	}
 
-	public void Awake()
-	{
-		MaxHealth = CampaignState.Instance.PlayerHealthMax;
-		Health = CampaignState.Instance.PlayerHealth;
-	}
-
 	protected override void Start()
 	{
 		base.Start();
+		MaxHealth = CampaignState.Instance.PlayerHealthMax;
+		Health = CampaignState.Instance.PlayerHealth;
+		HealthBar.Setup(MaxHealth);
 		AddAnimation(new GenericEntityAnimations(AnimationEffect.SquishY | AnimationEffect.SquishX | AnimationEffect.Wobble | AnimationEffect.Bob));
 		transform.position = new Vector3(-35, 0, 0);
 	}

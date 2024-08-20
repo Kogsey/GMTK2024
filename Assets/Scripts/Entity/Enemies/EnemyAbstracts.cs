@@ -41,7 +41,10 @@ public abstract class Enemy : Entity
 	}
 
 	protected void SetMoveSprite()
-		=> MoveSprite.sprite = SpriteBank.Instance.GetSprite(DisplayAction);
+	{
+		if (MoveSprite != null)
+			MoveSprite.sprite = SpriteBank.Instance.GetSprite(DisplayAction);
+	}
 
 	public abstract void PickNextAction();
 

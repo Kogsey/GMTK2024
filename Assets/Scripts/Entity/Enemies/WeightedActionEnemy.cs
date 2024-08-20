@@ -82,7 +82,7 @@ public class WeightedActionEnemy : Enemy
 				goto case WeightedEnemyActionType.Attack;
 
 			case WeightedEnemyActionType.Weaken:
-				yield return Singleton<Player>.instance.InflictEffect(new DamageModMultiplier(0.5f, IconID.PurpleSwirl) { TurnsLeft = NextAction.Amount });
+				yield return Singleton<Player>.instance.Damage(this, 4, new DamageModMultiplier(0.5f, IconID.PurpleSwirl) { TurnsLeft = NextAction.Amount });
 				break;
 
 			case WeightedEnemyActionType.Burn:
@@ -94,7 +94,7 @@ public class WeightedActionEnemy : Enemy
 				break;
 
 			case WeightedEnemyActionType.Snooze:
-				yield return Singleton<Player>.instance.InflictEffect(new TurnModEffect(-1) { TurnsLeft = 2 });
+				yield return Singleton<Player>.instance.Damage(this, 4, new TurnModEffect(-1) { TurnsLeft = 2 });
 				break;
 
 			default:

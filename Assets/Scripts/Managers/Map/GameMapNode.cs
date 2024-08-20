@@ -55,8 +55,5 @@ public class GameMapNode : MonoBehaviour
 	}
 
 	public void OnMouseUpAsButton()
-	{
-		if (MapNode != null)
-			CampaignState.SetCurrentLevel(mapNode);
-	}
+		=> CampaignState.SetCurrentLevel(mapNode);
 }

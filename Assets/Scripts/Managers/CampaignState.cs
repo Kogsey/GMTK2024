@@ -57,29 +57,14 @@ public class MapNode : IEnumerable<MapNode>
 	public bool Visited { get; set; }
 	public bool Locked { get; set; } = true;
 
-	public void Modify(LevelData levelData)
+	public LevelData GetLevelData() => new()
 	{
-		levelData.EnemyTypes = EnemyGeneration;
-		levelData.Level = LevelNumber;
-		switch (NodeLevelType)
-		{
-			case LevelType.EnemyHard:
-				levelData.Difficulty += Random.Range(1, 4);
-				break;
-
-			case LevelType.EnemyNormal:
-				break;
-
-			case LevelType.SunBoss:
-				levelData.SunBoss = true;
-				break;
-
-			case LevelType.Treasure:
-			case LevelType.Start:
-			default:
-				break;
-		}
-	}
+		Difficulty = NodeLevelType != LevelType.EnemyHard ? Random.Range(0, 6) : Random.Range(4, 10),
+		EnemyTypes = EnemyGeneration,
+		Level = LevelNumber,
+		SunBoss = NodeLevelType == LevelType.SunBoss,
+		Endless = false,
+	};
 
 	public static MapNode GenerateNextNode(MapNode lastNode, int levelNumber, int levelCount)
 	{
@@ -196,7 +181,6 @@ public class MapData : IEnumerable<IEnumerable<MapNode>>
 
 public class LevelData
 {
-	public int EnemyCount;
 	public int Difficulty;
 	public int Level;
 	public bool Endless;
@@ -218,9 +202,17 @@ public class CampaignState : MonoBehaviour
 			return;
 		}
 		DontDestroyOnLoad(gameObject);
+		RegenCamp();
+	}
 
+	private void RegenCamp()
+	{
 		Deck = GenerateStartDeck();
 		MapData = MapData.GenerateMap();
+		Instance.PlayerHealth = Instance.PlayerHealthMax;
+
+		campaignCurrentMapLevelData = null;
+		endlessLevel = 0;
 	}
 
 	public void Update()
@@ -232,59 +224,62 @@ public class CampaignState : MonoBehaviour
 		}
 	}
 
-	public static void OnEndState()
-		=> SpriteBank.Instance.BackgroundRenderer.color = new Color(38f / 255, 38f / 255, 38f / 255);
+	public static bool Endless = false;
 
-	public static void RestartCampaign()
+	public static void StartCampaign()
 	{
-		EraseCampaign();
-		SceneManager.LoadScene("Map");
+		Endless = false;
+		SceneManager.LoadScene("StoryModeMessage");
+	}
+
+	public static void StartEndless()
+	{
+		Endless = true;
+		SceneManager.LoadScene("BattleScene");
+	}
+
+	public static void RestartGame()
+	{
+		Instance.RegenCamp();
+		if (Endless)
+			StartEndless();
+		else
+			StartCampaign();
 	}
 
 	public static void MainMenuLose()
 	{
-		EraseCampaign();
+		Instance.RegenCamp();
 		SceneManager.LoadScene("MainMenu");
 	}
 
 	public static void MainMenuWin()
 	{
-		EraseCampaign();
+		Instance.RegenCamp();
 		SceneManager.LoadScene("MainMenu");
 	}
 
 	public static void MainMenuThankyou()
-        => SceneManager.LoadScene("MainMenu");
+		=> SceneManager.LoadScene("MainMenu");
 
 	public static void ThankyouButton()
 		=> SceneManager.LoadScene("ThankYou");
 
-    public static void StoreMessageStart()
-        => SceneManager.LoadScene("Map");
+	public static void StoreMessageStart()
+		=> SceneManager.LoadScene("Map");
 
-    public static void StoreMessageMainMenu()
-        => SceneManager.LoadScene("MainMenu");
+	public static void StoreMessageMainMenu()
+		=> SceneManager.LoadScene("MainMenu");
 
-    public static void ExitButton()
+	public static void ExitButton()
 		=> Application.Quit();
-
-	public static void EraseCampaign()
-	{
-		if (Instance != null)
-		{
-			Destroy(Instance);
-			Instance = null;
-		}
-	}
-
-	private MapNode currentNode;
 
 	public static void SetCurrentLevel(MapNode mapNode)
 	{
 		mapNode.Visited = true;
 		foreach (MapNode nextNodes in mapNode)
 			nextNodes.Locked = false;
-		Instance.currentNode = mapNode;
+		Instance.campaignCurrentMapLevelData = mapNode.GetLevelData();
 
 		if (mapNode.NodeLevelType == MapNode.LevelType.Treasure)
 			SceneManager.LoadScene("CardPickScene");
@@ -292,19 +287,15 @@ public class CampaignState : MonoBehaviour
 			SceneManager.LoadScene("BattleScene");
 	}
 
-	public static LevelData GetLevelData()
+	private LevelData campaignCurrentMapLevelData;
+	private int endlessLevel = 0;
+
+	public static LevelData GetLevelData() => Endless ? new()
 	{
-		LevelData data = new()
-		{
-			Difficulty = Random.Range(1, 3),
-			Endless = Instance.currentNode == null,
-			EnemyCount = Random.Range(1, 4),
-			Level = -1,
-			EnemyTypes = EnemyGeneration.None,
-		};
-		Instance.currentNode?.Modify(data);
-		return data;
-	}
+		Difficulty = ++Instance.endlessLevel,
+		Level = Instance.endlessLevel,
+		Endless = true,
+	} : Instance.campaignCurrentMapLevelData;
 
 	public List<CardData> GenerateStartDeck()
 	{
@@ -318,9 +309,15 @@ public class CampaignState : MonoBehaviour
 	}
 
 	public CardData[] StarterCards;
-	public int LevelNumber { get; private set; } = 1;
 	public List<CardData> Deck { get; private set; }
-	public int PlayerHealth { get; set; } = 40;
+	private int _playerHealth;
+
+	public int PlayerHealth
+	{
+		get => Endless ? PlayerHealthMax : _playerHealth;
+		set => _playerHealth = value;
+	}
+
 	public int PlayerHealthMax { get; set; } = 40;
 	public MapData MapData { get; private set; }
 
@@ -359,13 +356,18 @@ public class CampaignState : MonoBehaviour
 	}
 
 	public static void PostCardPicked()
-		=> SceneManager.LoadScene("Map", LoadSceneMode.Single);
+	{
+		if (Endless)
+			SceneManager.LoadScene("BattleScene");
+		else
+			SceneManager.LoadScene("Map");
+	}
 
 	public static float RarityToWeight(Rarity rarity) => rarity switch
 	{
 		Rarity.Common => 10f,
-		Rarity.Rare => 1f,
-		Rarity.Epic => 0.1f,
+		Rarity.Rare => 2,
+		Rarity.Epic => 0.5f,
 		Rarity.Legendary => 0.5f,
 		_ => 0f,
 	};

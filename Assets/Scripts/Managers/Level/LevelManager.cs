@@ -90,7 +90,10 @@ public class LevelManager : MonoBehaviour, ISingleton
 				CurrentRoundState = RoundState.PlayerTurn;
 
 			foreach (Enemy killMe in ToRemove)
+			{
 				Enemies.Remove(killMe);
+				Destroy(killMe.gameObject);
+			}
 			ToRemove.Clear();
 		}
 		LevelIsOver = true;
@@ -99,7 +102,6 @@ public class LevelManager : MonoBehaviour, ISingleton
 	public void UpdateKill(Enemy killMe)
 	{
 		Debug.WriteLine($"{killMe} killed");
-		Destroy(killMe.gameObject);
 		if (CurrentRoundState == RoundState.EnemyTurn)
 			ToRemove.Add(killMe);
 		else

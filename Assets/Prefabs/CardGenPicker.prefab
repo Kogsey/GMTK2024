@@ -78,12 +78,12 @@ SpriteRenderer:
   m_SortingLayerID: 750286703
   m_SortingLayer: 1
   m_SortingOrder: -10
-  m_Sprite: {fileID: 1740833655456025424, guid: 2c4c257b9e19ff6448d24b6fa0b58c6a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2c4c257b9e19ff6448d24b6fa0b58c6a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 15.315216, y: 22.339998}
+  m_Size: {x: 16.685682, y: 23.88}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -255,6 +255,8 @@ MonoBehaviour:
   Actions: {fileID: 627592845588164905}
   Description: {fileID: 8230141122581749641}
   Name: {fileID: 626452824665222214}
+  IsMainMenu: 0
+  ButtonType: 0
   PopDistance: 10
 --- !u!61 &3284064292248232509
 BoxCollider2D:

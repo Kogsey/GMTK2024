@@ -9,7 +9,7 @@ public class PickCardBehave : BaseCardBehave
 	{
 		Campaign,
 		Endless,
-		Settings,
+		HowToPlay,
 	}
 
 	public MainMenuButton ButtonType;
@@ -66,8 +66,8 @@ public class PickCardBehave : BaseCardBehave
 						SceneManager.LoadScene("BattleScreen");
 						break;
 
-					case MainMenuButton.Settings:
-						SceneManager.LoadScene("Settings");
+					case MainMenuButton.HowToPlay:
+						SceneManager.LoadScene("HowToPlay");
 						break;
 
 					default:

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
+using Random = UnityEngine.Random;
 
 [Singleton]
 public class CardManager : MonoBehaviour, ISingleton
@@ -114,10 +116,10 @@ public class CardManager : MonoBehaviour, ISingleton
 
 	private IEnumerator ChangeCount(TextMeshProUGUI mesh, int from, List<CardData> to)
 	{
-		for (; from < to.Count; from++)
+		for (; from != to.Count; from -= (int)math.sign(from - to.Count))
 		{
 			mesh.text = from.ToString();
-			yield return new WaitForSeconds(0.2f);
+			yield return null;
 		}
 	}
 

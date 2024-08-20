@@ -29,5 +29,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoseGame.unity
     guid: d61533fcc88964349bcae3d23f14c6b8
+  - enabled: 1
+    path: Assets/Scenes/StoryModeMessage.unity
+    guid: 0e55347d7b867b347a45dd8f3e1ec6ed
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

@@ -254,15 +254,18 @@ public class CampaignState : MonoBehaviour
 	}
 
 	public static void MainMenuThankyou()
-	{
-		EraseCampaign();
-		SceneManager.LoadScene("MainMenu");
-	}
+        => SceneManager.LoadScene("MainMenu");
 
 	public static void ThankyouButton()
 		=> SceneManager.LoadScene("ThankYou");
 
-	public static void ExitButton()
+    public static void StoreMessageStart()
+        => SceneManager.LoadScene("Map");
+
+    public static void StoreMessageMainMenu()
+        => SceneManager.LoadScene("MainMenu");
+
+    public static void ExitButton()
 		=> Application.Quit();
 
 	public static void EraseCampaign()

@@ -238,7 +238,7 @@ public class CampaignState : MonoBehaviour
 	public static void StartCampaign()
 	{
 		Endless = false;
-		SceneManager.LoadScene("StoryModeMessage");
+		SceneManager.LoadScene("Map");
 	}
 
 	public static void StartEndless()
@@ -256,29 +256,17 @@ public class CampaignState : MonoBehaviour
 			StartCampaign();
 	}
 
-	public static void MainMenuLose()
+	public static void MainMenuOnEnd()
 	{
 		Instance.RegenCamp();
 		SceneManager.LoadScene("MainMenu");
 	}
 
-	public static void MainMenuWin()
-	{
-		Instance.RegenCamp();
-		SceneManager.LoadScene("MainMenu");
-	}
-
-	public static void MainMenuThankyou()
+	public static void NavigateMainMenu()
 		=> SceneManager.LoadScene("MainMenu");
 
-	public static void ThankyouButton()
+	public static void NavigateThankyou()
 		=> SceneManager.LoadScene("ThankYou");
-
-	public static void StoreMessageStart()
-		=> SceneManager.LoadScene("Map");
-
-	public static void StoreMessageMainMenu()
-		=> SceneManager.LoadScene("MainMenu");
 
 	public static void ExitButton()
 		=> Application.Quit();

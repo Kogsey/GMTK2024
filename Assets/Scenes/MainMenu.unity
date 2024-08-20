@@ -796,7 +796,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 356491905}
         m_TargetAssemblyTypeName: CampaignState, Assembly-CSharp
-        m_MethodName: ThankyouButton
+        m_MethodName: NavigateThankyou
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1292,6 +1292,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 4b7c3b2ec50cfe84cabeaacbf68c1bb9, type: 3}
+    - target: {fileID: 5534869340928487544, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6184876284159980306, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -59,7 +59,7 @@ public class PickCardBehave : BaseCardBehave
 				switch (ButtonType)
 				{
 					case MainMenuButton.Campaign:
-						CampaignState.StartCampaign();
+						SceneManager.LoadScene("StoryModeMessage");
 						break;
 
 					case MainMenuButton.Endless:

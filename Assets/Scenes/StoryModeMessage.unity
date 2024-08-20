@@ -476,7 +476,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1021833193}
         m_TargetAssemblyTypeName: CampaignState, Assembly-CSharp
-        m_MethodName: StoreMessageStart
+        m_MethodName: StartCampaign
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -886,7 +886,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1021833193}
         m_TargetAssemblyTypeName: CampaignState, Assembly-CSharp
-        m_MethodName: StoreMessageMainMenu
+        m_MethodName: NavigateMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

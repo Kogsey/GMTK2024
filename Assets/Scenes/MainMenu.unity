@@ -1231,6 +1231,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6380819072021721967, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Size.x
+      value: 16.685682
+      objectReference: {fileID: 0}
+    - target: {fileID: 6380819072021721967, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_Size.y
+      value: 23.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 6380819072021721967, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6957027928509977809, guid: cde853238233dca408cead8e8e6c2cc2, type: 3}
       propertyPath: IsMainMenu
       value: 1

@@ -19,6 +19,6 @@ MonoBehaviour:
   Energy: 3
   BaseRarity: 2
   MinValue: 20
-  MaxValue: 30
-  RareValue: 40
+  MaxValue: 40
+  RareValue: 50
   CardType: 1

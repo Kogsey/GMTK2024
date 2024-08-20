@@ -778,7 +778,7 @@ MonoBehaviour:
   EnemyParent: {fileID: 2011032195}
   Player: {fileID: 1942400410}
   IconPrefab: {fileID: 8205594403056624896, guid: 483f3d028b291f94aabe67a9a9582276, type: 3}
-  DebugGenSunBoss: 1
+  DebugGenSunBoss: 0
 --- !u!114 &1259012044
 MonoBehaviour:
   m_ObjectHideFlags: 0

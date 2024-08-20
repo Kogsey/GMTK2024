@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9443f8a29d4b647b53f03ccc308398, type: 3}
   m_Name: Space_MediumWhale
   m_EditorClassIdentifier: 
+  HeightMultiplier: 1
   MinHealth: 30
   MaxHealth: 40
   StartBlock: 0
@@ -20,10 +21,10 @@ MonoBehaviour:
   AnimationEffects: -1
   Sprite: {fileID: -3434600693742510003, guid: c16ab405e425bf246a299d0bc333a4d9, type: 3}
   ActionPool:
-  - ActionDisplay: 2
-    Amount: 10
-    Weight: 3
+  - ActionDisplay: 5
+    Amount: 1
+    Weight: 1
   - ActionDisplay: 0
     Amount: 10
-    Weight: 1
+    Weight: 5
   MinLevel: 12

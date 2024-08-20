@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -89,8 +88,7 @@ public abstract class Entity : MonoBehaviour
 	protected virtual Color DrawColour { set => SpriteRenderer.color = value; }
 
 	protected virtual Vector3 BaseScale => Vector3.one * 4;
-	public Color TargetColour => (Highlight ? HighlightColour : Color.white).WithAlpha(1f - _evasionChance / 100f);
-	public List<IEntityEffect<Entity>> Effects { get; } = new List<IEntityEffect<Entity>>();
+	public virtual Color TargetColour => (Highlight ? HighlightColour : Color.white).WithAlpha(1f - _evasionChance / 100f);
 	public bool PauseAnimation { get; set; } = false;
 
 	protected virtual void Start()
@@ -99,14 +97,9 @@ public abstract class Entity : MonoBehaviour
 		HealthBar.Setup(MaxHealth);
 	}
 
-	public virtual float ModifyDamage(float damage)
-	{
-		foreach (IEntityEffect<Entity> effect in Effects)
-			damage = effect.ModifyDamage(damage);
-		return damage;
-	}
+	public abstract float ModifyDamage(float damage);
 
-	public virtual IEnumerator Damage(Entity source, int damage)
+	public virtual IEnumerator Damage(Entity source, int damage, IEntityEffect<Entity> applyOnHit = null)
 	{
 		if (Health < 0)
 			yield break;
@@ -137,6 +130,9 @@ public abstract class Entity : MonoBehaviour
 			StartCoroutine(BlockEffect());
 			yield break;
 		}
+
+		if (applyOnHit != null)
+			yield return InflictEffect(applyOnHit);
 
 		if (Absorption > 0)
 		{
@@ -221,21 +217,16 @@ public abstract class Entity : MonoBehaviour
 		yield return null;
 	}
 
+	public abstract IEnumerator PreTurnEffects();
+
 	public abstract IEnumerator Turn();
 
 	public virtual IEnumerator PostTurn()
 	{
-		for (int index = 0; index < Effects.Count; index++)
-		{
-			yield return Effects[index].OnTurnEnd(this);
-			if (Effects[index].TurnsLeft <= 0)
-			{
-				Effects[index].RemoveIcon();
-				Effects.RemoveAt(index);
-				index--;
-			}
-		}
+		yield return PostTurnEffects();
 	}
+
+	protected abstract IEnumerator PostTurnEffects();
 
 	protected virtual void Update()
 	{
@@ -253,10 +244,7 @@ public abstract class Entity : MonoBehaviour
 
 	public abstract void AddAnimation(IEntityAnimation<Entity> animation);
 
-	public virtual IEnumerator InflictEffect(IEntityEffect<Entity> effect)
-	{
-		Effects.Add(effect);
-		effect.SetupIcon(EffectsHolder.transform);
-		yield return effect.OnInflict(this);
-	}
+	public abstract IEnumerator InflictEffect(IEntityEffect<Entity> effect);
+
+	public abstract void ClearEffects();
 }

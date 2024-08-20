@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static System.Net.Mime.MediaTypeNames;
-using Random = UnityEngine.Random;
 using Application = UnityEngine.Application;
+using Random = UnityEngine.Random;
 
 public class MapNode : IEnumerable<MapNode>
 {
@@ -224,16 +223,16 @@ public class CampaignState : MonoBehaviour
 		MapData = MapData.GenerateMap();
 	}
 
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (SceneManager.GetActiveScene().name == "MainMenu")
-                Application.Quit();
-        }
-    }
+	public void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			if (SceneManager.GetActiveScene().name == "MainMenu")
+				Application.Quit();
+		}
+	}
 
-    public static void OnEndState()
+	public static void OnEndState()
 		=> SpriteBank.Instance.BackgroundRenderer.color = new Color(38f / 255, 38f / 255, 38f / 255);
 
 	public static void RestartCampaign()
@@ -254,23 +253,19 @@ public class CampaignState : MonoBehaviour
 		SceneManager.LoadScene("MainMenu");
 	}
 
-    public static void MainMenuThankyou()
-    {
-        EraseCampaign();
-        SceneManager.LoadScene("MainMenu");
-    }
+	public static void MainMenuThankyou()
+	{
+		EraseCampaign();
+		SceneManager.LoadScene("MainMenu");
+	}
 
-    public static void ThankyouButton()
-    {
-        SceneManager.LoadScene("ThankYou");
-    }
+	public static void ThankyouButton()
+		=> SceneManager.LoadScene("ThankYou");
 
-    public static void ExitButton()
-    {
-        Application.Quit();
-    }
+	public static void ExitButton()
+		=> Application.Quit();
 
-    public static void EraseCampaign()
+	public static void EraseCampaign()
 	{
 		if (Instance != null)
 		{

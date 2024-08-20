@@ -13,18 +13,21 @@ MonoBehaviour:
   m_Name: Space_OhLordHeComing
   m_EditorClassIdentifier: 
   HeightMultiplier: 2
-  MinHealth: 30
-  MaxHealth: 40
-  StartBlock: 0
+  MinHealth: 50
+  MaxHealth: 60
+  StartBlock: 10
   StartAbsorb: 0
   GenerationData: 4
   AnimationEffects: -1
   Sprite: {fileID: 8414023098420518651, guid: c16ab405e425bf246a299d0bc333a4d9, type: 3}
   ActionPool:
-  - ActionDisplay: 2
-    Amount: 10
-    Weight: 3
-  - ActionDisplay: 0
-    Amount: 10
+  - ActionDisplay: 1
+    Amount: 30
+    Weight: 1
+  - ActionDisplay: 3
+    Amount: 5
+    Weight: 1
+  - ActionDisplay: 4
+    Amount: 20
     Weight: 1
   MinLevel: 13

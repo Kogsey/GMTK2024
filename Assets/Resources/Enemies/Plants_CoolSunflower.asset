@@ -21,10 +21,13 @@ MonoBehaviour:
   AnimationEffects: -1
   Sprite: {fileID: 3996960239137516747, guid: c16ab405e425bf246a299d0bc333a4d9, type: 3}
   ActionPool:
-  - ActionDisplay: 2
-    Amount: 10
-    Weight: 3
+  - ActionDisplay: 4
+    Amount: 20
+    Weight: 1
   - ActionDisplay: 0
     Amount: 10
-    Weight: 1
+    Weight: 5
+  - ActionDisplay: 5
+    Amount: 2
+    Weight: 2
   MinLevel: 0

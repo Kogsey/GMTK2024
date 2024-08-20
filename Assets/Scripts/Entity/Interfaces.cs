@@ -56,6 +56,22 @@ public class DoTEffect : IEntityEffect<Entity>
 	public int DamagePerTurn { get; }
 }
 
+public class TurnModEffect : IEntityEffect<Player>
+{
+	public TurnModEffect(int turnCountChange) => TurnCountChange = turnCountChange;
+
+	public int TurnCountChange { get; }
+	public IconID IconID => IconID.ZZZZZZ;
+	public SpriteRenderer Icon { get; set; }
+	public int TurnsLeft { get; set; }
+
+	public IEnumerator OnTurnStart(Player entity)
+	{
+		entity.Energy += TurnCountChange;
+		yield return null;
+	}
+}
+
 /// <summary> Animations should be additive and not interfere with other animations </summary>
 /// <typeparam name="T"> </typeparam>
 public interface IEntityAnimation<in T> where T : Entity
@@ -95,5 +111,5 @@ public static class Extensions
 	}
 
 	public static void RemoveIcon<T>(this IEntityEffect<T> effect) where T : Entity
-		=> Object.Destroy(effect.Icon);
+		=> Object.Destroy(effect.Icon.gameObject);
 }

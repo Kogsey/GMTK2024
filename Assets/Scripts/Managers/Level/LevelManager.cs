@@ -57,6 +57,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 				case RoundState.PlayerTurn:
 					Debug.WriteLine("PlayerTurn");
 					yield return Player.ResetStats();
+					yield return Player.PreTurnEffects();
 					yield return Player.Turn();
 					yield return Player.PostTurn();
 					break;
@@ -66,6 +67,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 					{
 						Debug.WriteLine(enemy);
 						yield return enemy.ResetStats();
+						yield return enemy.PreTurnEffects();
 						yield return enemy.Turn();
 						yield return enemy.PostTurn();
 					}
@@ -100,7 +102,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 		else
 			Enemies.Remove(killMe);
 
-		if (Enemies.Count == 0)
+		if (HasGameEnded())
 		{
 			StopCoroutine(Coroutine);
 			LevelIsOver = true;

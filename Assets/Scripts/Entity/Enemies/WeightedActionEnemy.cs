@@ -15,6 +15,7 @@ public enum WeightedEnemyActionType
 	Weaken,
 	Burn,
 	ElectricAttack,
+	Snooze,
 }
 
 public class WeightedActionEnemy : Enemy
@@ -30,6 +31,7 @@ public class WeightedActionEnemy : Enemy
 			WeightedEnemyActionType.Burn => IconID.Fire,
 			WeightedEnemyActionType.Heal => IconID.Heart,
 			WeightedEnemyActionType.ElectricAttack => IconID.Lightning,
+			WeightedEnemyActionType.Snooze => IconID.ZZZZZZ,
 			_ => throw new NotImplementedException(),
 		};
 
@@ -80,15 +82,19 @@ public class WeightedActionEnemy : Enemy
 				goto case WeightedEnemyActionType.Attack;
 
 			case WeightedEnemyActionType.Weaken:
-				yield return Singleton<Player>.instance.InflictEffect(new DamageModMultiplier(0.5f, IconID.PurpleSwirl));
+				yield return Singleton<Player>.instance.InflictEffect(new DamageModMultiplier(0.5f, IconID.PurpleSwirl) { TurnsLeft = NextAction.Amount });
 				break;
 
 			case WeightedEnemyActionType.Burn:
-				yield return Singleton<Player>.instance.InflictEffect(new DoTEffect(3, 3, IconID.Fire));
+				yield return Singleton<Player>.instance.InflictEffect(new DoTEffect(NextAction.Amount, 3, IconID.Fire));
 				break;
 
 			case WeightedEnemyActionType.ElectricAttack:
-				yield return Singleton<Player>.instance.InflictEffect(new DoTEffect(2, 3, IconID.Lightning));
+				yield return Singleton<Player>.instance.InflictEffect(new DoTEffect(NextAction.Amount, 3, IconID.Lightning));
+				break;
+
+			case WeightedEnemyActionType.Snooze:
+				yield return Singleton<Player>.instance.InflictEffect(new TurnModEffect(-1) { TurnsLeft = 2 });
 				break;
 
 			default:

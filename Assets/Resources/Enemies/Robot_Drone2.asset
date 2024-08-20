@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9443f8a29d4b647b53f03ccc308398, type: 3}
   m_Name: Robot_Drone2
   m_EditorClassIdentifier: 
+  HeightMultiplier: 1
   MinHealth: 10
   MaxHealth: 10
   StartBlock: 0
@@ -20,10 +21,10 @@ MonoBehaviour:
   AnimationEffects: 7
   Sprite: {fileID: 233444719677416144, guid: c16ab405e425bf246a299d0bc333a4d9, type: 3}
   ActionPool:
-  - ActionDisplay: 2
-    Amount: 10
-    Weight: 3
+  - ActionDisplay: 3
+    Amount: 2
+    Weight: 1
   - ActionDisplay: 0
     Amount: 10
-    Weight: 1
+    Weight: 2
   MinLevel: 1

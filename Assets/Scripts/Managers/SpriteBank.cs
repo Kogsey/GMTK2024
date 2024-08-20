@@ -39,6 +39,12 @@ public class SpriteBank : MonoBehaviour
 
 	public Sprite[] Backgrounds;
 
+	public void SetBackgroundColourDark()
+		=> BackgroundRenderer.color = Color.white;
+
+	public void SetBackgroundColourLight()
+		=> BackgroundRenderer.color = Color.white;
+
 	public void SetBackGround(LevelData level) => BackgroundRenderer.sprite =
 		level.SunBoss ? Backgrounds[3] :
 		EnumUtility.HasFlag(level.EnemyTypes, EnemyGeneration.Robot) ? Backgrounds[0] :
@@ -68,4 +74,5 @@ public enum IconID
 	BrownExclaim,
 	YellowExclaim,
 	RedExclaim,
+	ZZZZZZ,
 }

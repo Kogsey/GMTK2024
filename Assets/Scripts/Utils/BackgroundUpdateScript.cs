@@ -3,7 +3,8 @@ using UnityEngine;
 public class BackgroundUpdateScript : MonoBehaviour
 {
 	public bool Dark;
-	public void Awake()
+
+	public void Start()
 	{
 		if (Dark)
 			SpriteBank.Instance.SetBackgroundColourDark();

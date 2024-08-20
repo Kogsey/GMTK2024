@@ -105,7 +105,10 @@ public class LevelManager : MonoBehaviour, ISingleton
 		if (CurrentRoundState == RoundState.EnemyTurn)
 			ToRemove.Add(killMe);
 		else
+		{
+			Destroy(killMe.gameObject);
 			Enemies.Remove(killMe);
+		}
 
 		if (HasGameEnded())
 		{

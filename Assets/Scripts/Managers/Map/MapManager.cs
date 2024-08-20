@@ -28,21 +28,38 @@ public class MapManager : MonoBehaviour, ISingleton
 	public void Awake()
 	{
 		MapData = CampaignState.Instance.MapData;
+		int TwoAgoCount = 0;
+		int LastCount = 0;
+		RectTransform lastTransform;
 		foreach (IEnumerable<MapNode> mapNodeLayer in MapData)
 		{
 			QuickSpreadY layer = Instantiate(QuickSpreadYPrefab, MapQuickSpread.transform);
 
-			RectTransform trans = layer.GetComponent<RectTransform>();
-			Vector2 sizeDelta = trans.sizeDelta;
-			sizeDelta.y *= Random.Range(0.9f, 1.1f);
-			trans.sizeDelta = sizeDelta;
-
+			int count = 0;
 			foreach (MapNode mapNode in mapNodeLayer)
 			{
+				count++;
 				GameMapNode mNode = Instantiate(MapNodePrefab, layer.transform);
 				GameMapNodes.Add(mNode);
 				mNode.MapNode = mapNode;
 			}
+
+			RectTransform trans = layer.GetComponent<RectTransform>();
+			Vector2 sizeDelta = trans.sizeDelta;
+			float minScale = Mathf.Lerp(0.4f, 0.9f, (float)count / MapData.MaximumNodesPerLayer);
+			float maxScale = Mathf.Lerp(0.6f, 1.1f, (float)count / MapData.MaximumNodesPerLayer);
+			sizeDelta.y *= Random.Range(minScale, maxScale);
+			trans.sizeDelta = sizeDelta;
+
+			if (TwoAgoCount == 1 && LastCount == 2 && count == 1)
+			{
+				sizeDelta = trans.sizeDelta;
+				sizeDelta.y *= Random.Range(0.1f, 0.2f);
+				trans.sizeDelta = sizeDelta;
+			}
+			TwoAgoCount = LastCount;
+			LastCount = count;
+			lastTransform = trans;
 		}
 
 		foreach (GameMapNode mapNode in GameMapNodes)

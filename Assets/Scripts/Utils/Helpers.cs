@@ -25,6 +25,12 @@ public static class Helpers
 		yield return enumerator2;
 	}
 
+	public static Color WithAlpha(Color colour, float alpha)
+	{
+		colour.a = alpha;
+		return colour;
+	}
+
 	//public static void CopyTransformsTo(this Transform from, Transform to)
 	//{
 	//	to.SetPositionAndRotation(from.position, from.rotation);

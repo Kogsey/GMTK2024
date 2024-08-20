@@ -30,6 +30,7 @@ public class CardManager : MonoBehaviour, ISingleton
 
 	private void Shuffle<T>(List<T> list)
 	{
+		SoundManager.PlayCardShuffle();
 		for (int i = 0; i < list.Count - 1; i++)
 		{
 			int j = Random.Range(i, list.Count);
@@ -42,6 +43,7 @@ public class CardManager : MonoBehaviour, ISingleton
 
 	private IEnumerator DiscardHand()
 	{
+		SoundManager.PlayCardShuffle();
 		Debug.WriteLine("DiscardHand");
 		CardBehave.IgnoreNewInteract = true;
 
@@ -105,14 +107,14 @@ public class CardManager : MonoBehaviour, ISingleton
 		{
 			(GameDeck, DiscardDeck) = (DiscardDeck, GameDeck);
 			Shuffle(GameDeck);
-			StartCoroutine(ChangeCount(DiscardText, GameDeck.Count, DiscardDeck.Count));
-			StartCoroutine(ChangeCount(DeckText, DiscardDeck.Count, GameDeck.Count));
+			StartCoroutine(ChangeCount(DiscardText, GameDeck.Count, DiscardDeck));
+			StartCoroutine(ChangeCount(DeckText, DiscardDeck.Count, GameDeck));
 		}
 	}
 
-	private IEnumerator ChangeCount(TextMeshProUGUI mesh, int from, int to)
+	private IEnumerator ChangeCount(TextMeshProUGUI mesh, int from, List<CardData> to)
 	{
-		for (; from < to; from++)
+		for (; from < to.Count; from++)
 		{
 			mesh.text = from.ToString();
 			yield return new WaitForSeconds(0.2f);

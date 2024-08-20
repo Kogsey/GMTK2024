@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,6 +25,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 	public RectTransform EnemyParent;
 	public Player Player;
 	public SpriteRenderer IconPrefab;
+	public TextMeshProUGUI LevelNumber;
 	public bool LevelIsOver { get; set; }
 
 	public enum RoundState
@@ -123,15 +125,18 @@ public class LevelManager : MonoBehaviour, ISingleton
 			CampaignState.Instance.PlayerHealth = Player.Health;
 			if (CampaignState.GetLevelData().SunBoss)
 			{
+				SoundManager.PlayWinGameSound();
 				SceneManager.LoadScene("WinGame", LoadSceneMode.Single);
 			}
 			else
 			{
+				SoundManager.PlayWinSound();
 				SceneManager.LoadScene("CardPickScene", LoadSceneMode.Single);
 			}
 		}
 		else if (Player.Health <= 0)
 		{
+			SoundManager.PlayLoseSound();
 			SceneManager.LoadScene("LoseGame", LoadSceneMode.Single);
 		}
 		return enemiesDead || Player.Health <= 0;
@@ -142,6 +147,7 @@ public class LevelManager : MonoBehaviour, ISingleton
 	private void GenerateLevel()
 	{
 		LevelData levelData = CampaignState.GetLevelData();
+		LevelNumber.text = $"Level: {levelData.Level}";
 		if (DebugGenSunBoss)
 			levelData.SunBoss = true;
 		if (levelData.SunBoss)

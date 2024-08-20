@@ -87,7 +87,7 @@ public abstract class Entity : MonoBehaviour
 	protected virtual Color DrawColour { set => SpriteRenderer.color = value; }
 
 	protected virtual Vector3 BaseScale => Vector3.one * 4;
-	public virtual Color TargetColour => (Highlight ? HighlightColour : Color.white).WithAlpha(1f - _evasionChance / 100f);
+	public virtual Color TargetColour => Helpers.WithAlpha(Highlight ? HighlightColour : Color.white, 1f - _evasionChance / 100f);
 	public bool PauseAnimation { get; set; } = false;
 
 	protected virtual void Start()

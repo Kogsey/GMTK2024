@@ -114,14 +114,23 @@ public class MapNode : IEnumerable<MapNode>
 
 public class MapData : IEnumerable<IEnumerable<MapNode>>
 {
-	private MapData()
-	{ }
+	private MapData(int length, int pathSplitChange, int pathMergeChance, int maximumNodesPerLayer)
+	{
+		Length = length;
+		PathSplitChange = pathSplitChange;
+		PathMergeChance = pathMergeChance;
+		MaximumNodesPerLayer = maximumNodesPerLayer;
+	}
 
 	public MapNode StartNode { get; private set; }
+	public int Length { get; private set; }
+	public int PathSplitChange { get; private set; }
+	public int PathMergeChance { get; private set; }
+	public int MaximumNodesPerLayer { get; private set; }
 
 	public static MapData GenerateMap(int length = 15, int splitChance = 30, int mergeChance = 30, int maxNodesPerLayer = 5)
 	{
-		MapData newMap = new();
+		MapData newMap = new(length, splitChance, mergeChance, maxNodesPerLayer);
 		List<MapNode> lastLayerNodes = new();
 		List<MapNode> newLayerNodes = new();
 		newMap.StartNode = MapNode.MakeStartNode(length);
@@ -136,7 +145,7 @@ public class MapData : IEnumerable<IEnumerable<MapNode>>
 			{
 				MapNode newNode = MapNode.GenerateNextNode(node, levelNum, length);
 				newLayerNodes.Add(newNode);
-				while (forceSplit || availableExtraNodes > 0 && Random.Range(0, 100) < splitChance)
+				while (forceSplit || availableExtraNodes > 0 && Helpers.PercentCheck(splitChance))
 				{
 					newNode = MapNode.GenerateNextNode(node, levelNum, length);
 					newLayerNodes.Add(newNode);
@@ -147,7 +156,7 @@ public class MapData : IEnumerable<IEnumerable<MapNode>>
 
 			for (int nodeIndex = 0; nodeIndex < newLayerNodes.Count; nodeIndex++)
 			{
-				if (nodeIndex + 1 < newLayerNodes.Count && Random.Range(0, 100) < mergeChance)
+				if (nodeIndex + 1 < newLayerNodes.Count && Helpers.PercentCheck(mergeChance))
 				{
 					newLayerNodes.Remove(MapNode.MergeNodes(newLayerNodes[nodeIndex], newLayerNodes[nodeIndex + 1]));
 				}
@@ -212,7 +221,7 @@ public class CampaignState : MonoBehaviour
 		Instance.PlayerHealth = Instance.PlayerHealthMax;
 
 		campaignCurrentMapLevelData = null;
-		endlessLevel = 0;
+		endlessLevel = 1;
 	}
 
 	public void Update()
@@ -224,7 +233,7 @@ public class CampaignState : MonoBehaviour
 		}
 	}
 
-	public static bool Endless = false;
+	public static bool Endless = true;
 
 	public static void StartCampaign()
 	{
@@ -288,11 +297,11 @@ public class CampaignState : MonoBehaviour
 	}
 
 	private LevelData campaignCurrentMapLevelData;
-	private int endlessLevel = 0;
+	private int endlessLevel = 1;
 
 	public static LevelData GetLevelData() => Endless ? new()
 	{
-		Difficulty = ++Instance.endlessLevel,
+		Difficulty = Instance.endlessLevel,
 		Level = Instance.endlessLevel,
 		Endless = true,
 	} : Instance.campaignCurrentMapLevelData;
@@ -357,6 +366,7 @@ public class CampaignState : MonoBehaviour
 
 	public static void PostCardPicked()
 	{
+		Instance.endlessLevel++;
 		if (Endless)
 			SceneManager.LoadScene("BattleScene");
 		else
